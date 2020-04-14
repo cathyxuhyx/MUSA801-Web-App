@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <!-- CSS Imports -->
+    <link rel="stylesheet" href="css/reset.css" />
+    <link rel="stylesheet" href="Leaflet.markercluster-1.4.1/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="Leaflet.markercluster-1.4.1/dist/MarkerCluster.Default.css " />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
+    <link rel="stylesheet" type="text/css" href="css/selectize.css" />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div id="intro">
+        <h1>RidershipXYZ</h1>
+        <p class="main">Use Case</p>
+        <p>Help planners grasp the future ridership change by using models
+          powered by APC data and other planning-related data.</p>
+        <!-- <button id = "glance">&nbsp&nbsp&nbsp<span class="triangle-right"></span>
+          &nbspRidership at a Glance</button>
+          <br>
+        <button id = "scenario">&nbsp&nbsp&nbsp<span class="triangle-right"></span>
+          &nbspSelect a Scenario</button> -->
+        <p class="main">Ridership at a Glance</p>
+          <button id = "glance">Show Downtown vs. Rest</button>
+        <p class="main">Scenarios</p>
+          <div class="control-group">
+  					<!-- <label for="select-beast">Beast:</label> -->
+  					<select id="select-scenario" class="demo-default" placeholder="Select a scenario...">
+  						<option value="">Select a scenario...</option>
+  						<option value="4">Population Density increase 10% at University of Texas</option>
+  						<option value="1">Building density increase 10% at the central business district</option>
+  						<option value="3">Bus Route 801 increase frequency to 10min</option>
+  					</select>
+  				</div>
+      </div>
+      <div id="glance"  style="display: none;">
+            </div>
+      <div id="scenario" style="display: none;">
+        <h1>RidershipXYZ</h1>
+        <p class="main">Subtitle....</p>
+        <p>Help planners grasp the future ridership change by using models
+          powered by APC data and other planning-related data.</p>
+        <br><br>
+        <button id = "glance">&nbsp&nbsp&nbsp<span class="triangle-right"></span>
+          &nbspRidership at a Glance</button>
+            </div>
+      <div class="sharing">
+        <a href="https://github.com/cathyxuhyx/MUSA_800_Austin-Bus-Network-Prediction"
+        class="sharing__item" target="_blank">Github Repository</a>
+      </div>
+    </div>
+    <!-- Map -->
+    <div id="map" class="map"></div>
+    <!-- Legend -->
+    <div class="legend">
+      <b>2019 Average Daily Boarding per Stop&nbsp</b>
+      <span class = "dot" style="width:6px;height:6px"></span>
+      <a> < 125&nbsp</a>
+      <span class = "dot" style="width:12px;height:12px"></span>
+      <a> 125-250&nbsp</a>
+      <span class = "dot" style="width:18px;height:18px"></span>
+      <a> 250-300&nbsp</a>
+      <span class = "dot" style="width:24px;height:24px"></span>
+      <a> 300-400&nbsp</a>
+      <span class = "dot" style="width:30px;height:30px"></span>
+      <a> > 400</a>
+    </div>
+
+    <!-- Javascript Imports -->
+    <script src="js/jquery-2.2.0.js"></script>
+    <script src="js/underscore.js"></script>
+    <script src="js/citysdk.js"></script>
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/"></script>
+    <script type="text/javascript" src="js/selectize.js"></script>
+    <script src="js/chroma.js"></script>
+    <script src="js/appFunctions.js"></script>
+  </body>
+</html>
