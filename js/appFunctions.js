@@ -22,43 +22,55 @@ var markers;
 color_ridership = chroma.scale('YlGnBu').colors(6);
 //define colors or size of the individual marker with respect to covid 19 cases
 var myStyle = function(row) {
-  mean_on = Number(row[row.length - 1]);
+  mean_on = Number(row[row.length - 1]).toFixed(2);
   if (mean_on < 125) {
     return {color: color_ridership[1],
             opacity: 0.5,
             weight: 5,
             fillColor: color_ridership[1],
-            radius: 3};
+            radius: 3,
+            stop_id: row[2],
+            mean_on: mean_on};
   } else if (mean_on >= 125 && mean_on < 250) {
     return {color: color_ridership[2],
             opacity: 0.5,
             weight: 5,
             fillColor: color_ridership[2],
-            radius: 3};
+            radius: 3,
+            stop_id: row[2],
+            mean_on: mean_on};
   } else if (mean_on >= 250 && mean_on < 300) {
     return {color: color_ridership[3],
             opacity: 0.5,
             weight: 5,
             fillColor: color_ridership[3],
-            radius: 3};
+            radius: 3,
+            stop_id: row[2],
+            mean_on: mean_on};
   } else if (mean_on >= 300 && mean_on < 400) {
     return {color: color_ridership[4],
             opacity: 0.5,
             weight: 5,
             fillColor: color_ridership[4],
-            radius: 3};
+            radius: 3,
+            stop_id: row[2],
+            mean_on: mean_on};
   } else if (mean_on >= 400) {
     return {color: color_ridership[5],
             opacity: 0.5,
             weight: 5,
             fillColor: color_ridership[5],
-            radius: 3};
+            radius: 3,
+            stop_id: row[2],
+            mean_on: mean_on};
   } else {
     return {color: "transparent",
             opacity: 0,
             weight: 5,
             fillColor: "transparent",
-            radius: 3};}
+            radius: 3,
+            stop_id: row[2],
+            mean_on: mean_on};}
             // if (mean_on < 125) {
             //   return {color: "transparent",
             //           opacity: 0.1,
@@ -123,23 +135,33 @@ var removeMarkers = function (marker) {
 //show results
 var showResults = function() {
   $('#intro').hide();
-  $('#USonly').hide();
-  // => <div id="results">
-  $('#results').show();
+  $('#stops').show();
 };
 
 //close results and return to original state
 var closeResults = function() {
   $('#intro').show();
-  $('#USonly').hide();
-  $('#results').hide();
+  $('#stops').hide();
   map.setView( [30.266926, -97.750519], 13);
 };
+
+var newtmp;
 
 //change side bar information with respect to each country
 var eachFeatureFunction = function(marker) {
   if (typeof(marker) != "undefined") {
     marker.on('click', function(event) {
+      $("#stop-name").text(event.target.options.stop_id);
+      $("#stop-boarding").text(event.target.options.mean_on);
+      showResults();
+      //zoom in to the selected region
+      tmp = event.target;
+      //highlight the stop;
+      newtmp = L.circleMarker(tmp._latlng, {radius: 12, color: "red"});
+      newtmp.addTo(map);
+
+      map.fitBounds([[tmp._latlng.lat-0.003, tmp._latlng.lng-0.003],
+        [tmp._latlng.lat+0.003, tmp._latlng.lng+0.003]]);
     });
   }
 };
@@ -182,12 +204,9 @@ $(document).ready(function() {
   });
 });
 
-$("button#glance").click(function() {
-
-});
-
-$("button#scenario").click(function() {
-
+$("#return").click(function() {
+  closeResults();
+  map.removeLayer(newtmp);
 });
 
 $('#select-scenario').selectize({
