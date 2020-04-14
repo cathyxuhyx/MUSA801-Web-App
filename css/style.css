@@ -42,9 +42,11 @@ p.main {
 
 .dot {
   opacity: 0.5;
-  background-color: #0069AB;
+  /* background-color: #0069AB; */
   border-radius: 50%;
   display: inline-block;
+  width:12px;
+  height:12px
 }
 
 .rec {

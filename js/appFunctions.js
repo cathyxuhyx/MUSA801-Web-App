@@ -166,6 +166,19 @@ $(document).ready(function() {
 
     //see the highest riderships
 
+
+    //show Legend
+    $(".legend").append(`<b>2019 Average Daily Boarding per Stop&nbsp</b>
+    <span class = "dot" style="background-color:${color_ridership[1]}"></span>
+    <a> < 125&nbsp</a>
+    <span class = "dot" style="background-color:${color_ridership[2]}"></span>
+    <a> 125-250&nbsp</a>
+    <span class = "dot" style="background-color:${color_ridership[3]}"></span>
+    <a> 250-300&nbsp</a>
+    <span class = "dot" style="background-color:${color_ridership[4]}"></span>
+    <a> 300-400&nbsp</a>
+    <span class = "dot" style="background-color:${color_ridership[5]}"></span>
+    <a> > 400</a>`);
   });
 });
 
