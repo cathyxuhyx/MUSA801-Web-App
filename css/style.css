@@ -18,6 +18,7 @@ p.main {
     left: 400px;
     height: 100%;
     top: 0;
+    color: black;
 }
 
 .sidebar {
@@ -70,7 +71,6 @@ a {
 }
 
 a:link {
-  color: white;
   font-weight: bold;
 }
 
@@ -110,4 +110,19 @@ button {
 .legend {
   background-color: rgba(255, 255, 255, 0.7);;
 
+}
+
+#sharing {
+  background-color: #FDCE07;
+  border: 1px solid white;
+  color: white;
+  border-radius: 5px;
+  text-align: center;
+  text-decoration: none;
+  /* display: inline-block; */
+  font-size: 15px;
+  font-weight: bold;
+  position: relative;
+  left: 0px;
+  /* width: 300px; */
 }
