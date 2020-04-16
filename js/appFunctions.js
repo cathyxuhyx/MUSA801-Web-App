@@ -16,8 +16,11 @@ var Stamen_TonerLite = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{
 }).addTo(map);
 
 //define variables and dataset links
-var dataset = "https://raw.githubusercontent.com/cathyxuhyx/MUSA_800_Austin-Bus-Network-Prediction/master/JS/js_test.csv";
-var markers, realmarkers;
+var dataset = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/master/data/js_test.csv";
+var cbd_data = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/master/data/cbd.geojson";
+var ut_data = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/master/data/ut.geojson";
+var nhood_data = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/master/data/nhood.geojson";
+var markers, realmarkers, nhood, cbd, ut, newtmp, nhood_bound;
 
 color_ridership = chroma.scale('YlGnBu').colors(6);
 //define colors or size of the individual marker with respect to covid 19 cases
@@ -111,8 +114,6 @@ var closeResults = function() {
   map.setView( [30.266926, -97.750519], 13);
 };
 
-var newtmp;
-
 //change side bar information with respect to each country
 var eachFeatureFunction = function(marker) {
   if (typeof(marker) != "undefined") {
@@ -125,7 +126,6 @@ var eachFeatureFunction = function(marker) {
       //highlight the stop;
       newtmp = L.circleMarker(tmp._latlng, {radius: 12, color: "red"});
       newtmp.addTo(map);
-
       map.fitBounds([[tmp._latlng.lat-0.003, tmp._latlng.lng-0.003],
         [tmp._latlng.lat+0.003, tmp._latlng.lng+0.003]]);
     });
@@ -134,6 +134,8 @@ var eachFeatureFunction = function(marker) {
 
 //run the analysis by start the request of the dataset
 $(document).ready(function() {
+
+  //read ridership data
   $.ajax(dataset).done(function(data) {
 
     //parse the csv file
@@ -165,23 +167,65 @@ $(document).ready(function() {
     <a> > 400</a>`);
   });
 
+  //read neighborhood dataset
+  $.ajax(nhood_data).done(function(data) {
+    var nhood_parse = turf.lineToPolygon(JSON.parse(data));
+    nhood_bound = turf.bbox(nhood_parse);
+    //make geojson layer
+    nhood = L.geoJSON(nhood_parse, {
+      "color": "#0069AB",
+      "fillcolor": "#0069AB",
+      "weight": 2,
+      "opacity": 0.5,
+      "fillOpacity": 0.2});
+  });
+
+  //read cbd dataset
+  $.ajax(cbd_data).done(function(data) {
+    var cbd_parse = turf.lineToPolygon(JSON.parse(data));
+    //make geojson layer
+    cbd = L.geoJSON(cbd_parse, {
+      color: "yellow",
+      fillcolor: "yellow",
+      weight: 2,
+      opacity: 0.5,
+      fillOpacity: 0.2});
+  });
+
+  //read ut dataset
+  $.ajax(ut_data).done(function(data) {
+    var ut_parse = turf.lineToPolygon(JSON.parse(data));
+    //make geojson layer
+    ut = L.geoJSON(ut_parse, {
+      "color": "red",
+      "fillcolor": "red",
+      "weight": 2,
+      "opacity": 0.5,
+      "fillOpacity": 0.2});
+  });
 });
 
 // switches
 var first = document.getElementById("glance");
 first.onchange = function () {
     if (this.checked == true) {
-        plotMarkers(realmarkers);
+      plotMarkers(realmarkers);
     }else {
-        removeMarkers(realmarkers);
+      removeMarkers(realmarkers);
     }};
 
-var first = document.getElementById("dt");
-first.onchange = function () {
+var second = document.getElementById("dt");
+second.onchange = function () {
     if (this.checked == true) {
-        plotMarkers(realmarkers);
+      map.addLayer(nhood);
+      map.addLayer(cbd);
+      map.addLayer(ut);
+      map.fitBounds([[nhood_bound[1],nhood_bound[0]],[nhood_bound[3],nhood_bound[2]]]);
     }else {
-        removeMarkers(realmarkers);
+      map.removeLayer(nhood);
+      map.removeLayer(cbd);
+      map.removeLayer(ut);
+      map.setView([30.266926, -97.750519], 13);
     }};
 
 //click event for each marker

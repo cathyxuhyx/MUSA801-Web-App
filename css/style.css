@@ -5,11 +5,12 @@ body {
 }
 
 p {
-  font-size: 16px;
+  font-size: 14px;
 }
 
 p.main {
   font-size: 20px;
+  font-weight: bold;
 }
 
 .map {
@@ -79,6 +80,15 @@ a:visited {
   font-weight: bold;
 }
 
+a.button#sharing {
+  font-size: 14px;
+  height: 25px;
+  width: 90px;
+  padding: 5px;
+  background-color: #FDCE07;
+  border: 0px;
+}
+
 button {
   background-color: #FDCE07;
   border: 1px solid white;
@@ -87,11 +97,12 @@ button {
   text-align: center;
   text-decoration: none;
   /* display: inline-block; */
-  font-size: 15px;
+  font-size: 30px;
   font-weight: bold;
   position: relative;
   left: 0px;
-  /* width: 300px; */
+  /* height: 50px;
+  width: 300px; */
 }
 
 .triangle-right {
@@ -125,4 +136,8 @@ button {
   position: relative;
   left: 0px;
   /* width: 300px; */
+}
+
+hr.solid {
+  border: 0.5px solid #FDCE07;
 }
