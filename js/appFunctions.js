@@ -26,7 +26,7 @@ var austin = [];
 color_ridership = chroma.scale('YlGnBu').colors(6);
 //define colors or size of the individual marker with respect to covid 19 cases
 var myStyle = function(row) {
-  mean_on = Number(row[row.length - 3]).toFixed(2);
+  mean_on = Number(row[row.length - 1]).toFixed(2);
   if (mean_on < 125) {
     return {color: color_ridership[1],
             opacity: 0.5,
@@ -143,13 +143,11 @@ $(document).ready(function() {
     var rows = data.split("\n");
     for (var i=0;i<rows.length;i=i+1){
         austin.push(rows[i].split(','));}
-
     //make markers and plot them
     markers = makeMarkers(austin);
     // find non-US markers
     realmarkers = _.filter(markers, function(marker){
       return typeof(marker) != "undefined";});
-
     plotMarkers(realmarkers);
     //see the highest riderships
 
