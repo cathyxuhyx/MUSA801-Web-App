@@ -17,7 +17,7 @@ var Stamen_TonerLite = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{
 
 //define variables and dataset links
 var dataset = "https://raw.githubusercontent.com/cathyxuhyx/MUSA_800_Austin-Bus-Network-Prediction/master/JS/js_test.csv";
-var markers;
+var markers, realmarkers;
 
 color_ridership = chroma.scale('YlGnBu').colors(6);
 //define colors or size of the individual marker with respect to covid 19 cases
@@ -71,36 +71,6 @@ var myStyle = function(row) {
             radius: 3,
             stop_id: row[2],
             mean_on: mean_on};}
-            // if (mean_on < 125) {
-            //   return {color: "transparent",
-            //           opacity: 0.1,
-            //           fillColor: "#0069AB",
-            //           radius: 3};
-            // } else if (mean_on >= 125 && mean_on < 250) {
-            //   return {color: "transparent",
-            //           opacity: 0.1,
-            //           fillColor: "#0069AB",
-            //           radius: 6};
-            // } else if (mean_on >= 250 && mean_on < 300) {
-            //   return {color: "transparent",
-            //           opacity: 0.1,
-            //           fillColor: "#0069AB",
-            //           radius: 9};
-            // } else if (mean_on >= 300 && mean_on < 400) {
-            //   return {color: "transparent",
-            //           opacity: 0.1,
-            //           fillColor: "#0069AB",
-            //           radius: 12};
-            // } else if (mean_on >= 400) {
-            //   return {color: "transparent",
-            //           opacity: 0.1,
-            //           fillColor: "#0069AB",
-            //           radius: 15};
-            // } else {
-            //   return {color: "transparent",
-            //           opacity: 0,
-            //           fillColor: "transparent",
-            //           radius: 3};}
           };
 
 //function to plot the locations
@@ -113,10 +83,6 @@ var makeMarkers = function (data) {
 });
   return addmarker;
 };
-
-// var markers = L.markerClusterGroup();
-// markers.addLayer(L.marker(getRandomLatLng(map)));
-// map.addLayer(markers);
 
 // and puts them on the map
 var plotMarkers = function (marker) {
@@ -179,15 +145,11 @@ $(document).ready(function() {
     //make markers and plot them
     markers = makeMarkers(austin);
     // find non-US markers
-    var realmarkers = _.filter(markers, function(marker){
+    realmarkers = _.filter(markers, function(marker){
       return typeof(marker) != "undefined";});
+
     plotMarkers(realmarkers);
-
-    //click event for each marker
-    _.each(markers, function(marker){eachFeatureFunction(marker);});
-
     //see the highest riderships
-
 
     //show Legend
     $(".legend").append(`<b>2019 Average Daily Boarding per Stop&nbsp</b>
@@ -202,11 +164,41 @@ $(document).ready(function() {
     <span class = "dot" style="background-color:${color_ridership[5]}"></span>
     <a> > 400</a>`);
   });
+
 });
+
+// switches
+var first = document.getElementById("glance");
+first.onchange = function () {
+    if (this.checked == true) {
+        plotMarkers(realmarkers);
+    }else {
+        removeMarkers(realmarkers);
+    }};
+
+var first = document.getElementById("dt");
+first.onchange = function () {
+    if (this.checked == true) {
+        plotMarkers(realmarkers);
+    }else {
+        removeMarkers(realmarkers);
+    }};
+
+//click event for each marker
+_.each(markers, function(marker){eachFeatureFunction(marker);});
 
 $("#return").click(function() {
   closeResults();
   map.removeLayer(newtmp);
+});
+
+$('#select-feature').selectize({
+  create: true,
+  sortField: {
+    field: 'text',
+    direction: 'asc'
+  },
+  dropdownParent: 'body'
 });
 
 $('#select-scenario').selectize({

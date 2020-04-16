@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="Leaflet.markercluster-1.4.1/dist/MarkerCluster.Default.css " />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
     <link rel="stylesheet" type="text/css" href="css/selectize.css" />
+    <link rel="stylesheet" href="css/pretty-checkbox.css" />
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
@@ -15,17 +16,39 @@
     <div class="sidebar">
       <div id="intro">
         <h1>RidershipXYZ</h1>
-        <p class="main">Use Case</p>
-        <p>Help planners grasp the future ridership change by using models
-          powered by APC data and other planning-related data.</p>
+        <p>This is a tool that helps planners to grasp the future ridership change in the
+          city of Austin, TX. It is based on machine learning models powered by APC data
+          and other planning-related open data.</p>
         <!-- <button id = "glance">&nbsp&nbsp&nbsp<span class="triangle-right"></span>
           &nbspRidership at a Glance</button>
           <br>
         <button id = "scenario">&nbsp&nbsp&nbsp<span class="triangle-right"></span>
           &nbspSelect a Scenario</button> -->
         <p class="main">Ridership at a Glance</p>
-          <button id = "glance">Show Downtown vs. Rest</button>
+          <!-- <button id = "dt">Show Downtown vs. Rest Ridership</button>
+          <button id = "glance">Show Ridership per Stop</button> -->
+          <div class="pretty p-switch p-fill">
+            <input type="checkbox" checked="checked" id = "glance"/>
+            <div class="state p-success">
+              <label>Show Ridership per Stop</label>
+            </div>
+          </div><br><br>
+          <div class="pretty p-switch p-fill">
+            <input type="checkbox"  id = "dt"/>
+            <div class="state p-success">
+              <label>Show Downtown vs. Rest Ridership</label>
+            </div>
+          </div>
         <p class="main">Scenarios</p>
+          <div class="control-group">
+  					<!-- <label for="select-beast">Beast:</label> -->
+  					<select id="select-feature" class="demo-default" placeholder="Select a feature...">
+  						<option value="">Select a feature...</option>
+  						<option value="4">Population Density increase 10% at University of Texas</option>
+  						<option value="1">Building density increase 10% at the central business district</option>
+  						<option value="3">Bus Route 801 increase frequency to 10min</option>
+  					</select>
+  				</div>
           <div class="control-group">
   					<!-- <label for="select-beast">Beast:</label> -->
   					<select id="select-scenario" class="demo-default" placeholder="Select a scenario...">
