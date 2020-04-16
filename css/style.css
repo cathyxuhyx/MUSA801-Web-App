@@ -141,3 +141,7 @@ button {
 hr.solid {
   border: 0.5px solid #FDCE07;
 }
+
+#mychart {
+  z-index: 3000;
+}

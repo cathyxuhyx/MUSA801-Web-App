@@ -16,16 +16,17 @@ var Stamen_TonerLite = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{
 }).addTo(map);
 
 //define variables and dataset links
-var dataset = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/master/data/js_test.csv";
+var dataset = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/master/data/js_test1.csv";
 var cbd_data = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/master/data/cbd.geojson";
 var ut_data = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/master/data/ut.geojson";
 var nhood_data = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/master/data/nhood.geojson";
 var markers, realmarkers, nhood, cbd, ut, newtmp, nhood_bound;
+var austin = [];
 
 color_ridership = chroma.scale('YlGnBu').colors(6);
 //define colors or size of the individual marker with respect to covid 19 cases
 var myStyle = function(row) {
-  mean_on = Number(row[row.length - 1]).toFixed(2);
+  mean_on = Number(row[row.length - 3]).toFixed(2);
   if (mean_on < 125) {
     return {color: color_ridership[1],
             opacity: 0.5,
@@ -140,7 +141,6 @@ $(document).ready(function() {
 
     //parse the csv file
     var rows = data.split("\n");
-    austin = [];
     for (var i=0;i<rows.length;i=i+1){
         austin.push(rows[i].split(','));}
 
