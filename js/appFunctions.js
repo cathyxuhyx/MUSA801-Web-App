@@ -20,7 +20,7 @@ var dataset = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/mast
 var cbd_data = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/master/data/cbd.geojson";
 var ut_data = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/master/data/ut.geojson";
 var nhood_data = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/master/data/nhood.geojson";
-var markers, realmarkers, nhood, cbd, ut, newtmp, nhood_bound;
+var markers, realmarkers, nhood, cbd, ut, newtmp, nhood_bound, tmp;
 var austin = [];
 
 color_ridership = chroma.scale('YlGnBu').colors(6);
@@ -163,6 +163,15 @@ $(document).ready(function() {
     <a> 300-400&nbsp</a>
     <span class = "dot" style="background-color:${color_ridership[5]}"></span>
     <a> > 400</a>`);
+
+    //click event for each marker
+    _.each(markers, function(marker){
+      eachFeatureFunction(marker);});
+
+    $("#return").click(function() {
+      closeResults();
+      map.removeLayer(newtmp);
+    });
   });
 
   //read neighborhood dataset
@@ -225,14 +234,6 @@ second.onchange = function () {
       map.removeLayer(ut);
       map.setView([30.266926, -97.750519], 13);
     }};
-
-//click event for each marker
-_.each(markers, function(marker){eachFeatureFunction(marker);});
-
-$("#return").click(function() {
-  closeResults();
-  map.removeLayer(newtmp);
-});
 
 $('#select-feature').selectize({
   create: true,
