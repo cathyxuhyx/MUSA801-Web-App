@@ -27,6 +27,9 @@ color_ridership = chroma.scale('YlGnBu').colors(6);
 //define colors or size of the individual marker with respect to covid 19 cases
 var myStyle = function(row) {
   mean_on = Number(row[row.length - 1]).toFixed(2);
+  residential = Number(row[39]).toFixed(3);
+  commercial = Number(row[33]).toFixed(3);
+  building_area = Number(row[31]).toFixed(3);
   if (mean_on < 125) {
     return {color: color_ridership[1],
             opacity: 0.5,
@@ -34,7 +37,10 @@ var myStyle = function(row) {
             fillColor: color_ridership[1],
             radius: 3,
             stop_id: row[2],
-            mean_on: mean_on};
+            mean_on: mean_on,
+            residential: residential,
+            commercial: commercial,
+            building_area: building_area};
   } else if (mean_on >= 125 && mean_on < 250) {
     return {color: color_ridership[2],
             opacity: 0.5,
@@ -42,7 +48,10 @@ var myStyle = function(row) {
             fillColor: color_ridership[2],
             radius: 3,
             stop_id: row[2],
-            mean_on: mean_on};
+            mean_on: mean_on,
+            residential: residential,
+            commercial: commercial,
+            building_area: building_area};
   } else if (mean_on >= 250 && mean_on < 300) {
     return {color: color_ridership[3],
             opacity: 0.5,
@@ -50,7 +59,10 @@ var myStyle = function(row) {
             fillColor: color_ridership[3],
             radius: 3,
             stop_id: row[2],
-            mean_on: mean_on};
+            mean_on: mean_on,
+            residential: residential,
+            commercial: commercial,
+            building_area: building_area};
   } else if (mean_on >= 300 && mean_on < 400) {
     return {color: color_ridership[4],
             opacity: 0.5,
@@ -58,7 +70,10 @@ var myStyle = function(row) {
             fillColor: color_ridership[4],
             radius: 3,
             stop_id: row[2],
-            mean_on: mean_on};
+            mean_on: mean_on,
+            residential: residential,
+            commercial: commercial,
+            building_area: building_area};
   } else if (mean_on >= 400) {
     return {color: color_ridership[5],
             opacity: 0.5,
@@ -66,7 +81,10 @@ var myStyle = function(row) {
             fillColor: color_ridership[5],
             radius: 3,
             stop_id: row[2],
-            mean_on: mean_on};
+            mean_on: mean_on,
+            residential: residential,
+            commercial: commercial,
+            building_area: building_area};
   } else {
     return {color: "transparent",
             opacity: 0,
@@ -74,7 +92,10 @@ var myStyle = function(row) {
             fillColor: "transparent",
             radius: 3,
             stop_id: row[2],
-            mean_on: mean_on};}
+            mean_on: mean_on,
+            residential: residential,
+            commercial: commercial,
+            building_area: building_area};}
           };
 
 //function to plot the locations
@@ -121,14 +142,22 @@ var eachFeatureFunction = function(marker) {
     marker.on('click', function(event) {
       $("#stop-name").text(event.target.options.stop_id);
       $("#stop-boarding").text(event.target.options.mean_on);
+      $("#stop-commercial").text(event.target.options.commercial);
+      $("#stop-residential").text(event.target.options.residential);
+      $("#stop-building").text(event.target.options.building_area);
       showResults();
+
+      //highlight the stop;
+      if (typeof(newtmp) != "undefined"){
+        map.removeLayer(newtmp);
+      }
       //zoom in to the selected region
       tmp = event.target;
-      //highlight the stop;
       newtmp = L.circleMarker(tmp._latlng, {radius: 12, color: "red"});
       newtmp.addTo(map);
       map.fitBounds([[tmp._latlng.lat-0.003, tmp._latlng.lng-0.003],
         [tmp._latlng.lat+0.003, tmp._latlng.lng+0.003]]);
+
     });
   }
 };
