@@ -142,8 +142,8 @@ var eachFeatureFunction = function(marker) {
     marker.on('click', function(event) {
       $("#stop-name").text(event.target.options.stop_id);
       $("#stop-boarding").text(event.target.options.mean_on);
-      $("#stop-commercial").text(event.target.options.commercial);
-      $("#stop-residential").text(event.target.options.residential);
+      $("#stop-commercial").text(event.target.options.commercial*100);
+      $("#stop-residential").text(event.target.options.residential*100);
       $("#stop-building").text(event.target.options.building_area);
       showResults();
 
