@@ -20,8 +20,8 @@ var dataset = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/mast
 var cbd_data = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/master/data/cbd.geojson";
 var ut_data = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/master/data/ut.geojson";
 var nhood_data = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/master/data/nhood.geojson";
-var hotline_data = "../hotlines.geojson";
-var markers, realmarkers, nhood, cbd, ut, newtmp, nhood_bound, tmp;
+var hotline_data = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/master/data/hotlines.geojson";
+var markers, realmarkers, nhood, cbd, ut, newtmp, nhood_bound, tmp, hotlines;
 var austin = [];
 
 color_ridership = chroma.scale('YlGnBu').colors(6);
@@ -168,6 +168,31 @@ var eachFeatureFunction = function(marker) {
   }
 };
 
+
+var newRoute, newRoute_b;
+// hover on each route
+var hoverRoute = function(routedata){
+  routedata.on('mouseover', function(e) {
+      var layer = e.target;
+      console.log(layer);
+      newRoute = L.geoJSON(layer.feature.geometry, {
+        "color": "white",
+        "weight": 8});
+      //newRoute_b = turf.buffer(layer.feature.geometry, 0.01, {units:'kilometers'});
+      newRoute_b = L.geoJSON(layer.feature.geometry, {
+        "color": color_ridership[5],
+        "weight": 11});
+      map.addLayer(newRoute_b);
+      map.addLayer(newRoute);
+  });
+
+  routedata.on('mouseout', function(e) {
+      var layer = e.target;
+      map.removeLayer(newRoute);
+      map.removeLayer(newRoute_b);
+  });
+};
+
 //run the analysis by start the request of the dataset
 $(document).ready(function() {
 
@@ -248,16 +273,18 @@ $(document).ready(function() {
 
   //read ut dataset
   $.ajax(hotline_data).done(function(data) {
-    var route_parse = turf.lineToPolygon(JSON.parse(data));
+    var route_parse = JSON.parse(data);
     //make geojson layer
     hotlines = L.geoJSON(route_parse, {
-      "color": "blue",
-      //"fillcolor": "blue",
-      "weight": 2,
-      "opacity": 0.5,
-      "fillOpacity": 0.2});
+      "color": "#a3724d",
+      "weight": 6});
+    //click event for each marker
+    _.each(hotlines._layers, function(route){
+      hoverRoute(route);});
   });
+
 });
+
 
 // switches
 var first = document.getElementById("glance");
