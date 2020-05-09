@@ -168,30 +168,28 @@ var eachFeatureFunction = function(marker) {
   }
 };
 
-
-var newRoute, newRoute_b;
 // hover on each route
+var newRoute, newRoute_b, route_layer;
 var hoverRoute = function(routedata){
-  routedata.on('mouseover', function(e) {
-      var layer = e.target;
-      console.log(layer);
-      newRoute = L.geoJSON(layer.feature.geometry, {
-        "color": "white",
-        "weight": 8});
-      //newRoute_b = turf.buffer(layer.feature.geometry, 0.01, {units:'kilometers'});
-      newRoute_b = L.geoJSON(layer.feature.geometry, {
-        "color": color_ridership[5],
-        "weight": 11});
+  routedata.on('click', function(e) {
+      var route_layer = e.target;
+      newRoute = L.geoJSON(route_layer.feature.geometry, {
+        color: "#fff6cf",
+        weight: 9});
+      newRoute_b = L.geoJSON(route_layer.feature.geometry, {
+        color: "#FDCE07",
+        weight: 12});
       map.addLayer(newRoute_b);
       map.addLayer(newRoute);
+      console.log(route_layer.feature.properties.ROUTE_ID);
   });
 
-  routedata.on('mouseout', function(e) {
-      var layer = e.target;
-      map.removeLayer(newRoute);
-      map.removeLayer(newRoute_b);
-  });
+  // routedata.on('mouseout', function(e) {
+  //     map.removeLayer(newRoute);
+  //     map.removeLayer(newRoute_b);
+  // });
 };
+
 
 //run the analysis by start the request of the dataset
 $(document).ready(function() {
@@ -252,8 +250,8 @@ $(document).ready(function() {
     var cbd_parse = turf.lineToPolygon(JSON.parse(data));
     //make geojson layer
     cbd = L.geoJSON(cbd_parse, {
-      color: "yellow",
-      fillcolor: "yellow",
+      color: "#0069AB",
+      fillcolor: "#0069AB",
       weight: 2,
       opacity: 0.5,
       fillOpacity: 0.2});
@@ -264,21 +262,21 @@ $(document).ready(function() {
     var ut_parse = turf.lineToPolygon(JSON.parse(data));
     //make geojson layer
     ut = L.geoJSON(ut_parse, {
-      "color": "red",
-      "fillcolor": "red",
+      "color": "#0069AB",
+      "fillcolor": "#0069AB",
       "weight": 2,
       "opacity": 0.5,
       "fillOpacity": 0.2});
   });
 
-  //read ut dataset
+  //read hotline dataset
   $.ajax(hotline_data).done(function(data) {
     var route_parse = JSON.parse(data);
     //make geojson layer
     hotlines = L.geoJSON(route_parse, {
-      "color": "#a3724d",
-      "weight": 6});
-    //click event for each marker
+      "color": "#FDCE07",
+      "weight": 9});
+    //hover event for each line
     _.each(hotlines._layers, function(route){
       hoverRoute(route);});
   });
@@ -301,12 +299,21 @@ second.onchange = function () {
       map.addLayer(nhood);
       map.addLayer(cbd);
       map.addLayer(ut);
-      map.fitBounds([[nhood_bound[1],nhood_bound[0]],[nhood_bound[3],nhood_bound[2]]]);
+      map.setView([30.266926, -97.750519], 12);
+      //map.fitBounds([[nhood_bound[1],nhood_bound[0]],[nhood_bound[3],nhood_bound[2]]]);
     }else {
       map.removeLayer(nhood);
       map.removeLayer(cbd);
       map.removeLayer(ut);
-      map.setView([30.266926, -97.750519], 13);
+      //map.setView([30.266926, -97.750519], 13);
+    }};
+
+var third = document.getElementById("route");
+third.onchange = function () {
+    if (this.checked == true) {
+      map.addLayer(hotlines);
+    }else {
+      map.removeLayer(hotlines);
     }};
 
 $('#select-feature').selectize({

@@ -4,15 +4,19 @@
     <meta charset="utf-8">
     <!-- CSS Imports -->
     <link rel="stylesheet" href="css/reset.css" />
-    <link rel="stylesheet" href="Leaflet.markercluster-1.4.1/dist/MarkerCluster.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
     <link rel="stylesheet" type="text/css" href="css/selectize.css" />
     <link rel="stylesheet" href="css/pretty-checkbox.css" />
     <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/billboard.js/1.12.8/billboard.css">
   </head>
   <body>
     <!-- Sidebar -->
+
     <div class="sidebar">
+      <div id="chart">
+        hellow
+      </div>
       <div id="intro">
         <h1>ridershipXYZ</h1>
         <p>This is a tool that helps planners to grasp the future ridership change in the
@@ -39,12 +43,12 @@
             </div>
           </div><br><br>
           <div class="pretty p-switch p-fill">
-            <input type="checkbox"  id = "dt"/>
+            <input type="checkbox"  id = "route"/>
             <div class="state p-success">
               <label>Show Popular Routes</label>
             </div>
           </div>
-          
+
         <p class="main"><i class="fas fa-pencil-ruler"></i>&nbspScenarios</p>
         <p>Select a feature to change:</p>
           <div class="control-group">
@@ -106,12 +110,13 @@
     <script src="js/underscore.js"></script>
     <script src="js/citysdk.js"></script>
     <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
-    <!-- <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/"></script> -->
     <script type="text/javascript" src="js/selectize.js"></script>
     <script src='https://unpkg.com/@turf/turf/turf.min.js'></script>
     <script src="js/chroma.js"></script>
     <script src="https://kit.fontawesome.com/c72c01224b.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/billboard.js/1.12.8/billboard.js"></script>
     <script src="js/appFunctions.js"></script>
   </body>
 </html>
