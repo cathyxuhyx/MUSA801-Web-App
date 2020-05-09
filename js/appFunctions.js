@@ -20,6 +20,7 @@ var dataset = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/mast
 var cbd_data = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/master/data/cbd.geojson";
 var ut_data = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/master/data/ut.geojson";
 var nhood_data = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/master/data/nhood.geojson";
+var hotline_data = "../hotlines.geojson";
 var markers, realmarkers, nhood, cbd, ut, newtmp, nhood_bound, tmp;
 var austin = [];
 
@@ -121,6 +122,11 @@ var removeMarkers = function (marker) {
   _.each(marker, function (x){
     if (typeof(x) !== "undefined") {return map.removeLayer(x);}
   });
+};
+
+// Plot Routes
+var plotroutes = function () {
+
 };
 
 //show results
@@ -235,6 +241,18 @@ $(document).ready(function() {
     ut = L.geoJSON(ut_parse, {
       "color": "red",
       "fillcolor": "red",
+      "weight": 2,
+      "opacity": 0.5,
+      "fillOpacity": 0.2});
+  });
+
+  //read ut dataset
+  $.ajax(hotline_data).done(function(data) {
+    var route_parse = turf.lineToPolygon(JSON.parse(data));
+    //make geojson layer
+    hotlines = L.geoJSON(route_parse, {
+      "color": "blue",
+      //"fillcolor": "blue",
       "weight": 2,
       "opacity": 0.5,
       "fillOpacity": 0.2});
