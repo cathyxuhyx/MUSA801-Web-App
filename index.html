@@ -66,25 +66,27 @@
 
         <p class="main"><i class="fas fa-pencil-ruler"></i>&nbspScenarios</p>
         <p>Select a feature to change:</p>
-          <div class="control-group">
+          <div class="container">
   					<!-- <label for="select-beast">Beast:</label> -->
   					<select id="select-feature" class="demo-default" placeholder="Select a feature...">
   						<option value="">Select a feature...</option>
-  						<option value="4">Land Use</option>
-  						<option value="1">Building Density</option>
-  						<option value="3">Route Frequency</option>
+  						<option value="LU">Land Use</option>
+  						<option value="BA">Building areas</option>
+  						<option value="FQ">Route Frequency</option>
   					</select>
   				</div>
-        <p>Select a scenario to see the respective ridership change on the map:</p>
-          <div class="control-group">
+          <p>Select a scenario to see the respective ridership change on the map:</p>
+          <div class="container">
   					<!-- <label for="select-beast">Beast:</label> -->
-  					<select id="select-scenario" class="demo-default" placeholder="Select a scenario...">
-  						<option value="">Select a scenario...</option>
-  						<option value="4">Building area increase in West Campus</option>
-  						<option value="1">Building areas increase in Riverside</option>
-  						<option value="3">Housing development project East of Downtown</option>
-  					</select>
-  				</div>
+  					<select id="select-scenario" class = "demo-default"  placeholder="Select a scenario...">
+  						<option value="LU">Select a scenario...</option>
+  						<option value="LU">Commercial Increase by 20%; Residential Decrease by 20%</option>
+              <option value="BA">Select a scenario...</option>
+              <option value="BA">Building areas Increase 40,000 sqft</option>
+              <option value="FQ">Select a scenario...</option>
+  						<option value="FQ">All Feeder Routes Become High Frequency</option>
+            </select>
+          </div>
       </div>
 
       <div id="stops" style="display: none;">
@@ -127,6 +129,7 @@
     <script src="js/underscore.js"></script>
     <script src="js/citysdk.js"></script>
     <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
     <script type="text/javascript" src="js/selectize.js"></script>
     <script src='https://unpkg.com/@turf/turf/turf.min.js'></script>
     <script src="js/chroma.js"></script>

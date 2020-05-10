@@ -433,7 +433,7 @@ $('#select-feature').selectize({
   dropdownParent: 'body'
 });
 
-$('#select-scenario').selectize({
+$('#selct-scenario').selectize({
   create: true,
   sortField: {
     field: 'text',
@@ -441,3 +441,27 @@ $('#select-scenario').selectize({
   },
   dropdownParent: 'body'
 });
+
+//$(document).ready(function() {
+  //$("#select-feature").bind('change',function(){
+     //$(".control-group").hide();
+     //var correspondingID = $(this).find(":selected").val();
+     //console.log(correspondingID);
+     //$("#" + correspondingID).show();
+  //}).trigger('change');
+//});
+$("#select-feature").change(function() {
+  if ($(this).data('options') === undefined) {
+    /*Taking an array of all options-2 and kind of embedding it on the select1*/
+    $(this).data('options', $('#select-scenario option').clone());
+  }
+  var id = $(this).val();
+  var options = $(this).data('options').filter('[value=' + id + ']');
+  $('#select-scenario').html(options);
+});
+//$("#select-feature").change(function(){
+   //correspondingID = $(this).find(":selected").val()
+   //$(".demo-default").hide();
+   //$("#" + correspondingID).show();
+
+//})
