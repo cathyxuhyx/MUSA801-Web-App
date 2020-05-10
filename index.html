@@ -69,7 +69,7 @@
           <div class="container">
   					<!-- <label for="select-beast">Beast:</label> -->
   					<select id="select-feature" class="demo-default" placeholder="Select a feature...">
-  						<option value="">Select a feature...</option>
+  						<option value="0">Select a feature...</option>
   						<option value="LU">Land Use</option>
   						<option value="BA">Building areas</option>
   						<option value="FQ">Route Frequency</option>
@@ -87,6 +87,7 @@
   						<option value="FQ">All Feeder Routes Become High Frequency</option>
             </select>
           </div>
+          <button id ="OG">Clear Scenarios</button>
       </div>
 
       <div id="stops" style="display: none;">
@@ -97,6 +98,7 @@
         <p>The commercial percentage of the stop is <span id="stop-commercial">&nbsp</span>%.</p>
         <p>The residential percentage of the stop is <span id="stop-residential">&nbsp</span>%.</p>
         <p>The building area within buffer is <span id="stop-building">&nbsp</span> sqft.</p>
+        <p id = "delta">The change of ridership at the stop is <span id="change">&nbsp</span>.</p>
         <button id ="return">Return to the Main Page</button>
       </div>
 
@@ -121,6 +123,7 @@
       <span class = "dot" style="width:30px;height:30px"></span>
       <a> > 400</a> -->
     </div>
+    <div class="sce-legend" style="display:none"></div>
 
     <!-- Javascript Imports -->
     <script src="js/jquery-2.2.0.js"></script>

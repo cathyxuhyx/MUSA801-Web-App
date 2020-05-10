@@ -17,16 +17,16 @@ var Stamen_TonerLite = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{
 
 //define variables and dataset links
 var dataset = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/master/data/js_test1.csv";
-var bldgarea = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/74171799c9982eaccc39fe9b7a1dfdee09b23bd9/data/BA.csv";
-var freq = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/74171799c9982eaccc39fe9b7a1dfdee09b23bd9/data/FQ.csv";
-var landuse = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/74171799c9982eaccc39fe9b7a1dfdee09b23bd9/data/LU.csv";
+var bldgarea = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/master/data/BA.csv";
+var freq = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/master/data/FQ.csv";
+var landuse = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/master/data/LU.csv";
 var cbd_data = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/master/data/cbd.geojson";
 var ut_data = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/master/data/ut.geojson";
 var nhood_data = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/master/data/nhood.geojson";
 var hotline_data = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/master/data/hotlines.geojson";
 var hotline_trend_data = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/master/data/route_js.json";
 var routes_data = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/master/data/routes.geojson";
-var markers, realmarkers, nhood, cbd, ut, newtmp, nhood_bound, tmp, hotlines, trends, routes;
+var markers, markers_ba,markers_lu,markers_fq, realmarkers, realmarkers_lu,realmarkers_ba,realmarkers_fq,nhood, cbd, ut, newtmp, nhood_bound, tmp, hotlines, trends, routes;
 var austin = [];
 var ba = [];
 var fq = [];
@@ -35,77 +35,172 @@ var lu = [];
 color_ridership = chroma.scale('YlGnBu').colors(6);
 //define colors or size of the individual marker with respect to covid 19 cases
 var myStyle = function(row) {
-  mean_on = Number(row[row.length - 1]).toFixed(2);
-  residential = Number(row[39]).toFixed(3);
-  commercial = Number(row[33]).toFixed(3);
-  building_area = Number(row[31]).toFixed(3);
-  if (mean_on < 125) {
-    return {color: color_ridership[1],
-            opacity: 0.6,
-            weight: 5,
-            fillColor: color_ridership[1],
-            radius: 3,
-            stop_id: row[2],
-            mean_on: mean_on,
-            residential: residential,
-            commercial: commercial,
-            building_area: building_area};
-  } else if (mean_on >= 125 && mean_on < 250) {
-    return {color: color_ridership[2],
-            opacity: 0.6,
-            weight: 5,
-            fillColor: color_ridership[2],
-            radius: 3,
-            stop_id: row[2],
-            mean_on: mean_on,
-            residential: residential,
-            commercial: commercial,
-            building_area: building_area};
-  } else if (mean_on >= 250 && mean_on < 300) {
-    return {color: color_ridership[3],
-            opacity: 0.6,
-            weight: 5,
-            fillColor: color_ridership[3],
-            radius: 3,
-            stop_id: row[2],
-            mean_on: mean_on,
-            residential: residential,
-            commercial: commercial,
-            building_area: building_area};
-  } else if (mean_on >= 300 && mean_on < 400) {
-    return {color: color_ridership[4],
-            opacity: 0.6,
-            weight: 5,
-            fillColor: color_ridership[4],
-            radius: 3,
-            stop_id: row[2],
-            mean_on: mean_on,
-            residential: residential,
-            commercial: commercial,
-            building_area: building_area};
-  } else if (mean_on >= 400) {
-    return {color: color_ridership[5],
-            opacity: 0.6,
-            weight: 5,
-            fillColor: color_ridership[5],
-            radius: 3,
-            stop_id: row[2],
-            mean_on: mean_on,
-            residential: residential,
-            commercial: commercial,
-            building_area: building_area};
+  var mean_on, residential, commercial, building_area, diff;
+  if(row.length >37){
+    mean_on = Number(row[row.length - 1]).toFixed(2);
+    residential = Number(row[39]).toFixed(3);
+    commercial = Number(row[33]).toFixed(3);
+    building_area = Number(row[31]).toFixed(3);
+    if (mean_on < 125) {
+      return {color: color_ridership[1],
+              opacity: 0.6,
+              weight: 5,
+              fillColor: color_ridership[1],
+              radius: 3,
+              stop_id: row[2],
+              mean_on: mean_on,
+              residential: residential,
+              commercial: commercial,
+              building_area: building_area};
+    } else if (mean_on >= 125 && mean_on < 250) {
+      return {color: color_ridership[2],
+              opacity: 0.6,
+              weight: 5,
+              fillColor: color_ridership[2],
+              radius: 3,
+              stop_id: row[2],
+              mean_on: mean_on,
+              residential: residential,
+              commercial: commercial,
+              building_area: building_area};
+    } else if (mean_on >= 250 && mean_on < 300)   {
+      return {color: color_ridership[3],
+              opacity: 0.6,
+              weight: 5,
+              fillColor: color_ridership[3],
+              radius: 3,
+              stop_id: row[2],
+              mean_on: mean_on,
+              residential: residential,
+              commercial: commercial,
+              building_area: building_area};
+    } else if (mean_on >= 300 && mean_on < 400) {
+      return {color: color_ridership[4],
+              opacity: 0.6,
+              weight: 5,
+              fillColor: color_ridership[4],
+              radius: 3,
+              stop_id: row[2],
+              mean_on: mean_on,
+              residential: residential,
+              commercial: commercial,
+              building_area: building_area};
+    } else if (mean_on >= 400) {
+      return {color: color_ridership[5],
+              opacity: 0.6,
+              weight: 5,
+              fillColor: color_ridership[5],
+              radius: 3,
+              stop_id: row[2],
+              mean_on: mean_on,
+              residential: residential,
+              commercial: commercial,
+              building_area: building_area};
+    } else {
+      return {color: "transparent",
+              opacity: 0,
+              weight: 5,
+              fillColor: "transparent",
+              radius: 3,
+              stop_id: row[2],
+              mean_on: mean_on,
+              residential: residential,
+              commercial: commercial,
+              building_area: building_area};
+    }
   } else {
-    return {color: "transparent",
-            opacity: 0,
-            weight: 5,
-            fillColor: "transparent",
-            radius: 3,
-            stop_id: row[2],
-            mean_on: mean_on,
-            residential: residential,
-            commercial: commercial,
-            building_area: building_area};}
-          };
+    diff = Number(row[36]).toFixed(3);
+    residential = Number(row[6]).toFixed(3);
+    commercial = Number(row[5]).toFixed(3);
+    building_area = Number(row[3]).toFixed(3);
+    mean_on = Number(row[34]).toFixed(3);
+    if (diff < -33) {
+      return {color: color_ridership[1],
+              opacity: 0.6,
+              weight: 5,
+              fillColor: color_ridership[1],
+              radius: 3,
+              stop_id: row[2],
+              mean_on: mean_on,
+              change: diff,
+              residential: residential,
+              commercial: commercial,
+              building_area: building_area};
+    } else if (diff >=-33 && diff < 4 && diff != 0 ) {
+      return {color: color_ridership[2],
+              opacity: 0.6,
+              weight: 5,
+              fillColor: color_ridership[2],
+              radius: 3,
+              stop_id: row[2],
+              mean_on: mean_on,
+              change: diff,
+              residential: residential,
+              commercial: commercial,
+              building_area: building_area};
+    } else if (diff >=4 && diff < 42) {
+      return {color: color_ridership[3],
+              opacity: 0.6,
+              weight: 5,
+              fillColor: color_ridership[3],
+              radius: 3,
+              mean_on: mean_on,
+              change: diff,
+              residential: residential,
+              commercial: commercial,
+              building_area: building_area};
+    } else if (diff >= 42 && diff < 80) {
+      return {color: color_ridership[4],
+              opacity: 0.6,
+              weight: 5,
+              fillColor: color_ridership[4],
+              radius: 3,
+              stop_id: row[2],
+              mean_on: mean_on,
+              change: diff,
+              residential: residential,
+              commercial: commercial,
+              building_area: building_area};
+    } else if (diff >= 80) {
+      return {color: color_ridership[5],
+              opacity: 0.6,
+              weight: 5,
+              fillColor: color_ridership[5],
+              radius: 3,
+              stop_id: row[2],
+              mean_on: mean_on,
+              change: diff,
+              residential: residential,
+              commercial: commercial,
+              building_area: building_area};
+    } else if (diff == 0){
+      return {color: "#dadada",
+              opacity: 0.6,
+              weight: 5,
+              fillColor: "#dadada",
+              radius: 2,
+              stop_id: row[2],
+              mean_on: mean_on,
+              change: diff,
+              residential: residential,
+              commercial: commercial,
+              building_area: building_area};
+    } else {
+      return {color: "transparent",
+              opacity: 0,
+              weight: 5,
+              fillColor: "transparent",
+              radius: 3,
+              stop_id: row[2],
+              mean_on: mean_on,
+              change: diff,
+              residential: residential,
+              commercial: commercial,
+              building_area: building_area};
+            }
+          }
+  }
+
 
 //function to plot the locations
 var makeMarkers = function (data) {
@@ -145,6 +240,18 @@ var closeResults = function() {
   map.setView( [30.266926, -97.750519], 13);
 };
 
+var clearScenarios = function(){
+  document.getElementById("glance").checked = false;
+  document.getElementById("select-feature").value = "0";
+  removeMarkers(realmarkers_ba);
+  removeMarkers(realmarkers_fq);
+  removeMarkers(realmarkers_lu);
+  plotMarkers(realmarkers);
+  $(".sce-legend").hide();
+  map.setView( [30.266926, -97.750519], 13);
+
+}
+
 //change side bar information with respect to each country
 var eachFeatureFunction = function(marker) {
   if (typeof(marker) != "undefined") {
@@ -154,8 +261,35 @@ var eachFeatureFunction = function(marker) {
       $("#stop-commercial").text(event.target.options.commercial*100);
       $("#stop-residential").text(event.target.options.residential*100);
       $("#stop-building").text(event.target.options.building_area);
+      $("#delta").hide();
       showResults();
 
+      //highlight the stop;
+      if (typeof(newtmp) != "undefined"){
+        map.removeLayer(newtmp);
+      }
+      //zoom in to the selected region
+      tmp = event.target;
+      newtmp = L.circleMarker(tmp._latlng, {radius: 12, color: "red"});
+      newtmp.addTo(map);
+      map.fitBounds([[tmp._latlng.lat-0.003, tmp._latlng.lng-0.003],
+        [tmp._latlng.lat+0.003, tmp._latlng.lng+0.003]]);
+
+    });
+  }
+};
+
+var eachFeatureFunction_sce = function(marker) {
+  if (typeof(marker) != "undefined") {
+    marker.on('click', function(event) {
+      $("#stop-name").text(event.target.options.stop_id);
+      $("#stop-boarding").text(event.target.options.mean_on);
+      $("#stop-commercial").text(event.target.options.commercial*100);
+      $("#stop-residential").text(event.target.options.residential*100);
+      $("#stop-building").text(event.target.options.building_area);
+      $("#change").text(event.target.options.change);
+      console.log(event.target.options.change);
+      showResults();
       //highlight the stop;
       if (typeof(newtmp) != "undefined"){
         map.removeLayer(newtmp);
@@ -295,48 +429,66 @@ $(document).ready(function() {
     var rows = data.split("\n");
     for (var i=0;i<rows.length;i=i+1){
         austin.push(rows[i].split(','));}
-    console.log(austin);
     //make markers and plot them
     markers = makeMarkers(austin);
     realmarkers = _.filter(markers, function(marker){
       return typeof(marker) != "undefined";});
       plotMarkers(realmarkers);
+    });
+      var scenarios = document.getElementById("select-scenario");
+      scenarios.onchange = function(){
+        if (event.target.value === "LU"){
+          console.log(event.target.value);
+          removeMarkers(realmarkers);
+          $.ajax(landuse).done(function(data) {
+            //parse the csv file
+            var rows = data.split("\n");
+            for (var i=0;i<rows.length;i=i+1){
+                lu.push(rows[i].split(','));}
+            //make markers and plot them
+            markers_lu = makeMarkers(lu);
+            realmarkers_lu = _.filter(markers_lu, function(marker){
+              return typeof(marker) != "undefined";});
+              plotMarkers(realmarkers_lu);
+              console.log(markers_lu);
+              console.log(realmarkers_lu);
+            });
+        }else if (event.target.value == "BA") {
+          removeMarkers(realmarkers);
+          $.ajax(bldgarea).done(function(data) {
+            //parse the csv file
+            var rows = data.split("\n");
+            for (var i=0;i<rows.length;i=i+1){
+                ba.push(rows[i].split(','));}
+            //make markers and plot them
+            markers_ba = makeMarkers(ba);
+            realmarkers_ba = _.filter(markers_ba, function(marker){
+              return typeof(marker) != "undefined";});
+             plotMarkers(realmarkers_ba);
+             console.log(markers_ba);
+             console.log(realmarkers_ba);
+           });
+        }else if (event.target.value == "FQ") {
+          removeMarkers(realmarkers);
+          $.ajax(freq).done(function(data) {
+            //parse the csv file
+            var rows = data.split("\n");
+            for (var i=0;i<rows.length;i=i+1){
+                fq.push(rows[i].split(','));}
+            //make markers and plot them
+            markers_fq = makeMarkers(fq);
+            realmarkers_fq = _.filter(markers_fq, function(marker){
+              return typeof(marker) != "undefined";});
+              plotMarkers(realmarkers_fq);
+              console.log(markers_fq);
+              console.log(realmarkers_fq);
+            });
+        }else{
+          plotMarkers(realmarkers);
+        }
+      };
 
-    $.ajax(bldgarea).done(function(data) {
-      //parse the csv file
-      var rows = data.split("\n");
-      for (var i=0;i<rows.length;i=i+1){
-          ba.push(rows[i].split(','));}
-      console.log(ba);
-      //make markers and plot them
-      markers_ba = makeMarkers(ba);
-      console.log(markers_ba);
-      realmarkers_ba = _.filter(markers_ba, function(marker){
-        return typeof(marker) != "undefined";});
-        console.log(realmarkers_ba);
-        plotMarkers(markers_ba);
 
-    $.ajax(freq).done(function(data) {
-      //parse the csv file
-      var rows = data.split("\n");
-      for (var i=0;i<rows.length;i=i+1){
-          ba.push(rows[i].split(','));}
-      //make markers and plot them
-      markers_fq = makeMarkers(fq);
-      realmarkers_fq = _.filter(markers_fq, function(marker){
-        return typeof(marker) != "undefined";});
-        plotMarkers(realmarkers_fq);
-
-    $.ajax(landuse).done(function(data) {
-      //parse the csv file
-      var rows = data.split("\n");
-      for (var i=0;i<rows.length;i=i+1){
-          ba.push(rows[i].split(','));}
-      //make markers and plot them
-      markers_lu = makeMarkers(lu);
-      realmarkers_lu = _.filter(markers_lu, function(marker){
-        return typeof(marker) != "undefined";});
-        plotMarkers(realmarkers_lu);
 
     //show Legend
     $(".legend").append(`<b>2019 Average Daily Boarding per Stop&nbsp</b>
@@ -351,15 +503,30 @@ $(document).ready(function() {
     <span class = "dot" style="background-color:${color_ridership[5]}"></span>
     <a> > 400</a>`);
 
-    //click event for each marker
-    _.each(markers, function(marker){
-      eachFeatureFunction(marker);});
+    $(".sce-legend").append(`<b>Changes of Average Daily Boarding per Stop&nbsp</b>
+    <span class = "dot" style="background-color:${"#dadada"}"></span>
+    <a> = 0</a>
+    <span class = "dot" style="background-color:${color_ridership[1]}"></span>
+    <a> < -33&nbsp</a>
+    <span class = "dot" style="background-color:${color_ridership[2]}"></span>
+    <a> -33-4&nbsp</a>
+    <span class = "dot" style="background-color:${color_ridership[3]}"></span>
+    <a> 4-42&nbsp</a>
+    <span class = "dot" style="background-color:${color_ridership[4]}"></span>
+    <a> 42-80&nbsp</a>
+    <span class = "dot" style="background-color:${color_ridership[5]}"></span>
+    <a> > 80</a>`);
 
-    $("#return").click(function() {
-      closeResults();
-      map.removeLayer(newtmp);
-    });
-  });});});});
+    //click event for each marker
+  //  _.each(markers, function(marker){
+    //  eachFeatureFunction(marker);});
+
+  //  $("#return").click(function() {
+    //  closeResults();
+    //  map.removeLayer(newtmp);
+  //  });
+//  });});});
+//});
 
   //read neighborhood dataset
   $.ajax(nhood_data).done(function(data) {
@@ -420,23 +587,81 @@ $(document).ready(function() {
 
 // switches
 document.getElementById("glance").onchange = function () {
+  console.log($('#select-feature').val());
+  $("#OG").click(function() {
+    clearScenarios();
+  });
+  if($('#select-feature').val() == null || $('#select-feature').val() == "0"){
     if (this.checked == true) {
-      plotMarkers(realmarkers);
+        plotMarkers(realmarkers);
 
-      //click event for each marker
-      _.each(markers, function(marker){
-        eachFeatureFunction(marker);});
+        //click event for each marker
+        _.each(markers, function(marker){
+          eachFeatureFunction(marker);});
 
-      $("#return").click(function() {
-        closeResults();
-        map.removeLayer(newtmp);
-      });
-      $(".legend").show();
-      map.setView([30.266926, -97.750519], 13);
-    }else {
-      removeMarkers(realmarkers);
-      $(".legend").hide();
-    }};
+        $("#return").click(function() {
+          closeResults();
+          map.removeLayer(newtmp);
+        });
+        $(".legend").show();
+        map.setView([30.266926, -97.750519], 13);
+      }else {
+        $(".legend").hide();
+      }
+    } else if ($('#select-feature').val() == "LU" && $('#select-scenario').val() == "LU") {
+
+        if (this.checked == true) {
+          plotMarkers(realmarkers_lu);
+
+          //click event for each marker
+          _.each(markers_lu, function(marker){
+            eachFeatureFunction_sce(marker);});
+
+          $("#return").click(function() {
+            closeResults();
+            map.removeLayer(newtmp);
+          });
+          $(".sce-legend").show();
+          map.setView([30.266926, -97.750519], 13);
+        }else {
+          $(".sce-legend").hide();
+        }
+      } else if ($('#select-feature').val() == "BA" && $('#select-scenario').val() == "BA") {
+        if (this.checked == true) {
+          plotMarkers(realmarkers_ba);
+
+          //click event for each marker
+          _.each(markers_ba, function(marker){
+            eachFeatureFunction_sce(marker);});
+
+          $("#return").click(function() {
+            closeResults();
+            map.removeLayer(newtmp);
+          });
+          $(".sce-legend").show();
+          map.setView([30.266926, -97.750519], 13);
+        }else {
+          $(".sce-legend").hide();
+        }
+      }else if ($('#select-feature').val() == "FQ" && $('#select-scenario').val() == "FQ") {
+          if (this.checked == true) {
+            plotMarkers(realmarkers_fq);
+
+            //click event for each marker
+            _.each(markers_fq, function(marker){
+              eachFeatureFunction_sce(marker);});
+
+            $("#return").click(function() {
+              closeResults();
+              map.removeLayer(newtmp);
+            });
+            $(".sce-legend").show();
+            map.setView([30.266926, -97.750519], 13);
+          }else {
+            $(".sce-legend").hide();
+          }
+        }
+  }
 
 document.getElementById("dt").onchange = function () {
     if (this.checked == true) {
@@ -447,6 +672,7 @@ document.getElementById("dt").onchange = function () {
       $('#chart_ridership').show();
       drawCharts2();
       $(".legend").hide();
+      $(".sce-legend").hide();
       //map.fitBounds([[nhood_bound[1],nhood_bound[0]],[nhood_bound[3],nhood_bound[2]]]);
     }else {
       map.removeLayer(nhood);
@@ -460,6 +686,7 @@ document.getElementById("route").onchange = function () {
     if (this.checked == true) {
       map.addLayer(hotlines);
       $(".legend").hide();
+      $(".sce-legend").hide();
       map.setView([30.286926, -97.750519], 12);
     }else {
       map.removeLayer(hotlines);
@@ -499,31 +726,18 @@ $('#selct-scenario').selectize({
     field: 'text',
     direction: 'asc'
   },
-  dropdownParent: 'body'
+  dropdownParent: 'body',
 });
 
-
+//set the dynamic secondary drop-down
 $("#select-feature").change(function() {
   if ($(this).data('options') === undefined) {
     /*Taking an array of all options-2 and kind of embedding it on the select1*/
     $(this).data('options', $('#select-scenario option').clone());
   }
   var id = $(this).val();
+  console.log(id);
   var options = $(this).data('options').filter('[value=' + id + ']');
+  console.log(options);
   $('#select-scenario').html(options);
 });
-var scenarios = document.getElementById("select-scenario");
-scenarios.onchange = function(){
-  if (event.target.value === "LU"){
-    removeMarkers(realmarkers);
-    plotMarkers(realmarkers_lu);
-  }else if (event.target.value == "BA") {
-    removeMarkers(realmarkers);
-    plotMarkers(realmarkers_ba);
-  }else if (event.target.value == "FQ") {
-    emoveMarkers(realmarkers);
-    plotMarkers(realmarkers_fq);
-  }else{
-    plotMarkers(realmarkers);
-  }
-};
