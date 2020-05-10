@@ -25,7 +25,7 @@ var ut_data = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/mast
 var nhood_data = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/master/data/nhood.geojson";
 var hotline_data = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/master/data/hotlines.geojson";
 var hotline_trend_data = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/master/data/route_js.json";
-var markers,markers_fq,markers_lu,markers_ba, realmarkers,realmarkers_lu,realmarkers_ba,realmarkers_fq, nhood, cbd, ut, newtmp, nhood_bound, tmp, hotlines, trends;
+var markers, realmarkers, nhood, cbd, ut, newtmp, nhood_bound, tmp, hotlines, trends;
 var austin = [];
 var ba = [];
 var fq = [];
