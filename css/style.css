@@ -27,7 +27,7 @@ p.main {
   left: 450px;
   width: 390px;
   top: 30px;
-  height: 510px;
+  #height: 510px;
   overflow-y: auto;
   padding: 30px;
   font-size: 16px;

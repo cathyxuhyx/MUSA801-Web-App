@@ -15,14 +15,20 @@
     <!-- Charts -->
     <div class = "chart" id="chart" style="display: none;">
       <div>
-        <!-- <a id = "route-title"></a> -->
         <button class="close" id="close">
           <i class="fas fa-times"></i>
-          <!-- <span aria-hidden="true">&times;</span> -->
         </button>
       </div><br>
       <div id="chart1"></div>
       <div id="chart2"></div>
+    </div>
+    <div class = "chart" id="chart_ridership" style="display: none;">
+      <div>
+        <button class="close" id="close">
+          <i class="fas fa-times"></i>
+        </button>
+      </div><br>
+      <div id="chart3"></div>
     </div>
     <!-- Sidebar -->
     <div class="sidebar">
@@ -31,32 +37,32 @@
         <p>This is a tool that helps planners to grasp the future ridership change in the
           city of Austin, TX. It is based on machine learning models powered by APC data
           and other planning-related open data.</p>
-        <!-- <button id = "glance">&nbsp&nbsp&nbsp<span class="triangle-right"></span>
-          &nbspRidership at a Glance</button>
-          <br>
-        <button id = "scenario">&nbsp&nbsp&nbsp<span class="triangle-right"></span>
-          &nbspSelect a Scenario</button> -->
-        <p class="main"><i class="fas fa-bus"></i>&nbspRidership at a Glance</p>
-          <!-- <button id = "dt">Show Downtown vs. Rest Ridership</button>
-          <button id = "glance">Show Ridership per Stop</button> -->
+        <p class="main"><i class="fas fa-bus"></i>&nbsp2019 Ridership at a Glance</p>
           <div class="pretty p-switch p-fill">
             <input type="checkbox" checked="checked" id = "glance"/>
             <div class="state p-success">
               <label>Show Ridership per Stop</label>
             </div>
+            <a style="margin-left: 40px;">Click on a stop to see its info</a>
+            <br><br>
           </div><br>
-          <div class="pretty p-switch p-fill">
-            <input type="checkbox"  id = "dt"/>
-            <div class="state p-success">
-              <label>Show Downtown vs. Rest Ridership</label>
-            </div>
-          </div><br>
+
           <div class="pretty p-switch p-fill">
             <input type="checkbox"  id = "route"/>
             <div class="state p-success">
               <label>Show Popular Routes</label>
             </div>
-          </div> <br><br>
+            <a style="margin-left: 40px;">Click on a route to see its ridership summary</a>
+            <br><br>
+          </div><br>
+
+          <div class="pretty p-switch p-fill">
+            <input type="checkbox"  id = "dt"/>
+            <div class="state p-success">
+              <label>Show Ridership by Regions</label>
+            </div>
+          </div><br><br>
+
 
         <p class="main"><i class="fas fa-pencil-ruler"></i>&nbspScenarios</p>
         <p>Select a feature to change:</p>
