@@ -25,7 +25,8 @@ var ut_data = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/mast
 var nhood_data = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/master/data/nhood.geojson";
 var hotline_data = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/master/data/hotlines.geojson";
 var hotline_trend_data = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/master/data/route_js.json";
-var markers, realmarkers, nhood, cbd, ut, newtmp, nhood_bound, tmp, hotlines, trends;
+var routes_data = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/master/data/routes.geojson";
+var markers, realmarkers, nhood, cbd, ut, newtmp, nhood_bound, tmp, hotlines, trends, routes;
 var austin = [];
 var ba = [];
 var fq = [];
@@ -40,7 +41,7 @@ var myStyle = function(row) {
   building_area = Number(row[31]).toFixed(3);
   if (mean_on < 125) {
     return {color: color_ridership[1],
-            opacity: 0.5,
+            opacity: 0.6,
             weight: 5,
             fillColor: color_ridership[1],
             radius: 3,
@@ -51,7 +52,7 @@ var myStyle = function(row) {
             building_area: building_area};
   } else if (mean_on >= 125 && mean_on < 250) {
     return {color: color_ridership[2],
-            opacity: 0.5,
+            opacity: 0.6,
             weight: 5,
             fillColor: color_ridership[2],
             radius: 3,
@@ -62,7 +63,7 @@ var myStyle = function(row) {
             building_area: building_area};
   } else if (mean_on >= 250 && mean_on < 300) {
     return {color: color_ridership[3],
-            opacity: 0.5,
+            opacity: 0.6,
             weight: 5,
             fillColor: color_ridership[3],
             radius: 3,
@@ -73,7 +74,7 @@ var myStyle = function(row) {
             building_area: building_area};
   } else if (mean_on >= 300 && mean_on < 400) {
     return {color: color_ridership[4],
-            opacity: 0.5,
+            opacity: 0.6,
             weight: 5,
             fillColor: color_ridership[4],
             radius: 3,
@@ -84,7 +85,7 @@ var myStyle = function(row) {
             building_area: building_area};
   } else if (mean_on >= 400) {
     return {color: color_ridership[5],
-            opacity: 0.5,
+            opacity: 0.6,
             weight: 5,
             fillColor: color_ridership[5],
             radius: 3,
@@ -198,8 +199,7 @@ var hoverRoute = function(routedata){
 
 // add hotline charts function
 var drawCharts = function(trends, n){
-//  $("#route-title").append(`<b>Route ${n} Ridership Summary</b>`);
-  title = `Route ${n} Ridership Summary`;
+  title = `Route ${n} Daily Ridership Summary`;
   var chart = bb.generate({
     title: {text: title,padding: {bottom: 30}},
     size: {height: 200,width: 300},
@@ -248,10 +248,46 @@ var drawCharts = function(trends, n){
   });
 };
 
-
+// function to draw average ridership
+var drawCharts2 = function(){
+  var chart3 = bb.generate({
+  title: {text:"Average Daily Boarding by Different Regions"},
+  data: {
+    columns: [
+	["CBD", 325],
+	["UT Austin", 373],
+	["Rest of Austin", 294]
+    ],
+    type: "bar",
+    colors: {
+      'CBD': color_ridership[3],
+      'UT Austin': color_ridership[5],
+      'Rest of Austin': color_ridership[2]
+    },
+    labels: {colors: "white", centered: true}
+  },
+  bar: {padding: 20, radius: {ratio: 0.3}},
+  tooltip: {show: false},
+  axis: {
+    x: {tick: {outer: false, show: false, text: {show: false}}},
+    y: {tick: {outer: false}}
+  },
+  bindto: "#chart3"
+});
+};
 
 //run the analysis by start the request of the dataset
 $(document).ready(function() {
+
+  //read all routes dataset
+  $.ajax(routes_data).done(function(data) {
+    routes = JSON.parse(data);
+    routes = L.geoJSON(routes, {
+      "color": "#bfe4e6",
+      "weight": 3,
+      "opacity": 0.5});
+    map.addLayer(routes);
+  });
 
   //read ridership data
   $.ajax(dataset).done(function(data) {
@@ -331,11 +367,11 @@ $(document).ready(function() {
     nhood_bound = turf.bbox(nhood_parse);
     //make geojson layer
     nhood = L.geoJSON(nhood_parse, {
-      "color": "#0069AB",
-      "fillcolor": "#0069AB",
-      "weight": 2,
+      "color": color_ridership[2],
+      "fillcolor": color_ridership[2],
+      "weight": 0,
       "opacity": 0.5,
-      "fillOpacity": 0.2});
+      "fillOpacity": 0.5});
   });
 
   //read cbd dataset
@@ -343,11 +379,11 @@ $(document).ready(function() {
     var cbd_parse = turf.lineToPolygon(JSON.parse(data));
     //make geojson layer
     cbd = L.geoJSON(cbd_parse, {
-      color: "#0069AB",
-      fillcolor: "#0069AB",
-      weight: 2,
+      color: color_ridership[3],
+      fillcolor: color_ridership[3],
+      weight: 0,
       opacity: 0.5,
-      fillOpacity: 0.2});
+      fillOpacity: 0.7});
   });
 
   //read ut dataset
@@ -355,11 +391,11 @@ $(document).ready(function() {
     var ut_parse = turf.lineToPolygon(JSON.parse(data));
     //make geojson layer
     ut = L.geoJSON(ut_parse, {
-      "color": "#0069AB",
-      "fillcolor": "#0069AB",
-      "weight": 2,
+      "color": color_ridership[5],
+      "fillcolor": color_ridership[5],
+      "weight": 0,
       "opacity": 0.5,
-      "fillOpacity": 0.2});
+      "fillOpacity": 0.7});
   });
 
   //read hotline dataset
@@ -383,37 +419,58 @@ $(document).ready(function() {
 
 
 // switches
-var first = document.getElementById("glance");
-first.onchange = function () {
+document.getElementById("glance").onchange = function () {
     if (this.checked == true) {
       plotMarkers(realmarkers);
+
+      //click event for each marker
+      _.each(markers, function(marker){
+        eachFeatureFunction(marker);});
+
+      $("#return").click(function() {
+        closeResults();
+        map.removeLayer(newtmp);
+      });
+      $(".legend").show();
+      map.setView([30.266926, -97.750519], 13);
     }else {
       removeMarkers(realmarkers);
+      $(".legend").hide();
     }};
 
-var second = document.getElementById("dt");
-second.onchange = function () {
+document.getElementById("dt").onchange = function () {
     if (this.checked == true) {
       map.addLayer(nhood);
       map.addLayer(cbd);
       map.addLayer(ut);
-      map.setView([30.266926, -97.750519], 12);
+      map.setView([30.296926, -97.800519], 12);
+      $('#chart_ridership').show();
+      drawCharts2();
+      $(".legend").hide();
       //map.fitBounds([[nhood_bound[1],nhood_bound[0]],[nhood_bound[3],nhood_bound[2]]]);
     }else {
       map.removeLayer(nhood);
       map.removeLayer(cbd);
       map.removeLayer(ut);
+      $('#chart_ridership').hide();
       //map.setView([30.266926, -97.750519], 13);
     }};
 
-var third = document.getElementById("route");
-third.onchange = function () {
+document.getElementById("route").onchange = function () {
     if (this.checked == true) {
       map.addLayer(hotlines);
+      $(".legend").hide();
+      map.setView([30.286926, -97.750519], 12);
     }else {
       map.removeLayer(hotlines);
+      $('#chart').hide();
+      if (typeof(newRoute) !== "undefined"){
+        map.removeLayer(newRoute);
+        map.removeLayer(newRoute_b);
+      }
     }};
 
+// close buttons
 document.getElementById("close").onclick = function(){
   $('#chart').hide();
   map.removeLayer(newRoute);
@@ -421,6 +478,12 @@ document.getElementById("close").onclick = function(){
   map.setView([30.266926, -97.750519], 12);
 };
 
+document.getElementById("chart_ridership").onclick = function(){
+  $('#chart_ridership').hide();
+  map.setView([30.266926, -97.750519], 12);
+};
+
+// drop down selection
 $('#select-feature').selectize({
   create: true,
   sortField: {
