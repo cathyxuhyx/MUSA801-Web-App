@@ -22,7 +22,8 @@ var ut_data = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/mast
 var nhood_data = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/master/data/nhood.geojson";
 var hotline_data = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/master/data/hotlines.geojson";
 var hotline_trend_data = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/master/data/route_js.json";
-var markers, realmarkers, nhood, cbd, ut, newtmp, nhood_bound, tmp, hotlines, trends;
+var routes_data = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/master/data/routes.geojson";
+var markers, realmarkers, nhood, cbd, ut, newtmp, nhood_bound, tmp, hotlines, trends, routes;
 var austin = [];
 
 color_ridership = chroma.scale('YlGnBu').colors(6);
@@ -34,7 +35,7 @@ var myStyle = function(row) {
   building_area = Number(row[31]).toFixed(3);
   if (mean_on < 125) {
     return {color: color_ridership[1],
-            opacity: 0.5,
+            opacity: 0.6,
             weight: 5,
             fillColor: color_ridership[1],
             radius: 3,
@@ -45,7 +46,7 @@ var myStyle = function(row) {
             building_area: building_area};
   } else if (mean_on >= 125 && mean_on < 250) {
     return {color: color_ridership[2],
-            opacity: 0.5,
+            opacity: 0.6,
             weight: 5,
             fillColor: color_ridership[2],
             radius: 3,
@@ -56,7 +57,7 @@ var myStyle = function(row) {
             building_area: building_area};
   } else if (mean_on >= 250 && mean_on < 300) {
     return {color: color_ridership[3],
-            opacity: 0.5,
+            opacity: 0.6,
             weight: 5,
             fillColor: color_ridership[3],
             radius: 3,
@@ -67,7 +68,7 @@ var myStyle = function(row) {
             building_area: building_area};
   } else if (mean_on >= 300 && mean_on < 400) {
     return {color: color_ridership[4],
-            opacity: 0.5,
+            opacity: 0.6,
             weight: 5,
             fillColor: color_ridership[4],
             radius: 3,
@@ -78,7 +79,7 @@ var myStyle = function(row) {
             building_area: building_area};
   } else if (mean_on >= 400) {
     return {color: color_ridership[5],
-            opacity: 0.5,
+            opacity: 0.6,
             weight: 5,
             fillColor: color_ridership[5],
             radius: 3,
@@ -272,21 +273,26 @@ var drawCharts2 = function(){
 //run the analysis by start the request of the dataset
 $(document).ready(function() {
 
+  //read all routes dataset
+  $.ajax(routes_data).done(function(data) {
+    routes = JSON.parse(data);
+    routes = L.geoJSON(routes, {
+      "color": "#bfe4e6",
+      "weight": 3,
+      "opacity": 0.5});
+    map.addLayer(routes);
+  });
+
   //read ridership data
   $.ajax(dataset).done(function(data) {
-
     //parse the csv file
     var rows = data.split("\n");
     for (var i=0;i<rows.length;i=i+1){
         austin.push(rows[i].split(','));}
     //make markers and plot them
     markers = makeMarkers(austin);
-    // find non-US markers
     realmarkers = _.filter(markers, function(marker){
       return typeof(marker) != "undefined";});
-    plotMarkers(realmarkers);
-    //see the highest riderships
-
     //show Legend
     $(".legend").append(`<b>2019 Average Daily Boarding per Stop&nbsp</b>
     <span class = "dot" style="background-color:${color_ridership[1]}"></span>
@@ -299,15 +305,6 @@ $(document).ready(function() {
     <a> 300-400&nbsp</a>
     <span class = "dot" style="background-color:${color_ridership[5]}"></span>
     <a> > 400</a>`);
-
-    //click event for each marker
-    _.each(markers, function(marker){
-      eachFeatureFunction(marker);});
-
-    $("#return").click(function() {
-      closeResults();
-      map.removeLayer(newtmp);
-    });
   });
 
   //read neighborhood dataset
@@ -371,6 +368,15 @@ $(document).ready(function() {
 document.getElementById("glance").onchange = function () {
     if (this.checked == true) {
       plotMarkers(realmarkers);
+
+      //click event for each marker
+      _.each(markers, function(marker){
+        eachFeatureFunction(marker);});
+
+      $("#return").click(function() {
+        closeResults();
+        map.removeLayer(newtmp);
+      });
       $(".legend").show();
       map.setView([30.266926, -97.750519], 13);
     }else {
