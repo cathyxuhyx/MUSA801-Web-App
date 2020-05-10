@@ -195,117 +195,49 @@ var drawCharts = function(trends, n){
 //  $("#route-title").append(`<b>Route ${n} Ridership Summary</b>`);
   title = `Route ${n} Ridership Summary`;
   var chart = bb.generate({
-    title: {
-      text: title,
-      padding: {bottom: 30}
-    },
-    size: {
-      height: 200,
-      width: 300
-    },
+    title: {text: title,padding: {bottom: 30}},
+    size: {height: 200,width: 300},
     data: {
-      columns: [
-        ["mean passenger load"].concat(trends[n]["mean_load"])
-      ],
+      columns: [["mean passenger load"].concat(trends[n]["mean_load"])],
       types: {'mean passenger load': "area-spline"},
       colors: {'mean passenger load':"#FDCE07"}
     },
     point: {show: false},
     area: {linearGradient: true},
     zoom: {enabled: true},
-    tooltip: {
-      linked: true
-    },
+    tooltip: {linked: true},
     axis: {
-    x: {
-      //show: false,
-      tick: {
-        outer: false,
-        show: false,
-        text: {show: false}
-      }
+      x: {tick: {outer: false,show: false,text: {show: false}}},
+      y: {tick: {outer: false,show: true,stepSize: 5}}
     },
-    y: {
-      //inner: true,
-      tick: {
-        outer: false,
-        show: true,
-        stepSize: 5
-      }
-    }
-  },
-  line: {
-    classes: [
-      "line-class-data1"
-    ]
-  },
-  grid: {
-    x: {show: false},
-    y: {show: false}
-  },
+    line: {classes: ["line-class-data1"]},
+    grid: {x: {show: false},y: {show: false}},
     bindto: "#chart1"
   });
 
   var chart2 = bb.generate({
-    size: {
-      height: 200,
-      width: 300
-    },
+    size: {height: 200, width: 300},
     data: {
       columns: [
         ["mean boarding"].concat(trends[n]["mean_on"]),
         ["mean alighting"].concat(trends[n]["mean_off"])
       ],
-      types: {
-        'mean boarding': "area",
-        'mean alighting': "area"
-      },
-      colors: {
-        'mean boarding': "#2166ac",
-        'mean alighting': "#ef8a62"
-      },
+      types: {'mean boarding': "area", 'mean alighting': "area"},
+      colors: {'mean boarding': "#2166ac", 'mean alighting': "#ef8a62"},
     },
     point: {show: false},
     area: {linearGradient: true},
     zoom: {enabled: true},
-    tooltip: {
-      linked: true//,
-      //grouped: false
-    },
+    tooltip: {linked: true},
     axis: {
-    x: {
-      label: {
-        position: "outer-center",
-        text: "Stop Sequence ID",
+      x: {
+        label: {position: "outer-center",text: "Stop Sequence ID",},
+        tick: {count: 5,outer: false,show: true}
+      },
+      y: {tick: {outer: false,show: true,stepSize: 3}}
     },
-      //show: false,
-      tick: {
-        count: 5,
-        outer: false,
-        show: true,
-        //stepSize: 20,
-        //text: {show: false}
-      }
-    },
-    y: {
-      //inner: true,
-      tick: {
-        outer: false,
-        show: true,
-        stepSize: 3
-      }
-    }
-  },
-  line: {
-    classes: [
-      "line-class-data1",
-      "line-class-data1"
-    ]
-  },
-  grid: {
-    x: {show: false},
-    y: {show: false}
-  },
+    line: {classes: ["line-class-data1","line-class-data1"]},
+    grid: {x: {show: false}, y: {show: false}},
     bindto: "#chart2"
   });
 };
