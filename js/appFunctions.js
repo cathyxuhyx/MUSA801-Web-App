@@ -17,13 +17,19 @@ var Stamen_TonerLite = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{
 
 //define variables and dataset links
 var dataset = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/master/data/js_test1.csv";
+var bldgarea = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/74171799c9982eaccc39fe9b7a1dfdee09b23bd9/data/BA.csv";
+var freq = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/74171799c9982eaccc39fe9b7a1dfdee09b23bd9/data/FQ.csv";
+var landuse = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/74171799c9982eaccc39fe9b7a1dfdee09b23bd9/data/LU.csv";
 var cbd_data = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/master/data/cbd.geojson";
 var ut_data = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/master/data/ut.geojson";
 var nhood_data = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/master/data/nhood.geojson";
 var hotline_data = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/master/data/hotlines.geojson";
 var hotline_trend_data = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/master/data/route_js.json";
-var markers, realmarkers, nhood, cbd, ut, newtmp, nhood_bound, tmp, hotlines, trends;
+var markers,markers_fq,markers_lu,markers_ba, realmarkers,realmarkers_lu,realmarkers_ba,realmarkers_fq, nhood, cbd, ut, newtmp, nhood_bound, tmp, hotlines, trends;
 var austin = [];
+var ba = [];
+var fq = [];
+var lu = [];
 
 color_ridership = chroma.scale('YlGnBu').colors(6);
 //define colors or size of the individual marker with respect to covid 19 cases
@@ -249,18 +255,52 @@ $(document).ready(function() {
 
   //read ridership data
   $.ajax(dataset).done(function(data) {
-
     //parse the csv file
     var rows = data.split("\n");
     for (var i=0;i<rows.length;i=i+1){
         austin.push(rows[i].split(','));}
+    console.log(austin);
     //make markers and plot them
     markers = makeMarkers(austin);
-    // find non-US markers
     realmarkers = _.filter(markers, function(marker){
       return typeof(marker) != "undefined";});
-    plotMarkers(realmarkers);
-    //see the highest riderships
+      plotMarkers(realmarkers);
+
+    $.ajax(bldgarea).done(function(data) {
+      //parse the csv file
+      var rows = data.split("\n");
+      for (var i=0;i<rows.length;i=i+1){
+          ba.push(rows[i].split(','));}
+      console.log(ba);
+      //make markers and plot them
+      markers_ba = makeMarkers(ba);
+      console.log(markers_ba);
+      realmarkers_ba = _.filter(markers_ba, function(marker){
+        return typeof(marker) != "undefined";});
+        console.log(realmarkers_ba);
+        plotMarkers(markers_ba);
+
+    $.ajax(freq).done(function(data) {
+      //parse the csv file
+      var rows = data.split("\n");
+      for (var i=0;i<rows.length;i=i+1){
+          ba.push(rows[i].split(','));}
+      //make markers and plot them
+      markers_fq = makeMarkers(fq);
+      realmarkers_fq = _.filter(markers_fq, function(marker){
+        return typeof(marker) != "undefined";});
+        plotMarkers(realmarkers_fq);
+
+    $.ajax(landuse).done(function(data) {
+      //parse the csv file
+      var rows = data.split("\n");
+      for (var i=0;i<rows.length;i=i+1){
+          ba.push(rows[i].split(','));}
+      //make markers and plot them
+      markers_lu = makeMarkers(lu);
+      realmarkers_lu = _.filter(markers_lu, function(marker){
+        return typeof(marker) != "undefined";});
+        plotMarkers(realmarkers_lu);
 
     //show Legend
     $(".legend").append(`<b>2019 Average Daily Boarding per Stop&nbsp</b>
@@ -283,7 +323,7 @@ $(document).ready(function() {
       closeResults();
       map.removeLayer(newtmp);
     });
-  });
+  });});});});
 
   //read neighborhood dataset
   $.ajax(nhood_data).done(function(data) {
@@ -399,14 +439,7 @@ $('#selct-scenario').selectize({
   dropdownParent: 'body'
 });
 
-//$(document).ready(function() {
-  //$("#select-feature").bind('change',function(){
-     //$(".control-group").hide();
-     //var correspondingID = $(this).find(":selected").val();
-     //console.log(correspondingID);
-     //$("#" + correspondingID).show();
-  //}).trigger('change');
-//});
+
 $("#select-feature").change(function() {
   if ($(this).data('options') === undefined) {
     /*Taking an array of all options-2 and kind of embedding it on the select1*/
@@ -416,9 +449,18 @@ $("#select-feature").change(function() {
   var options = $(this).data('options').filter('[value=' + id + ']');
   $('#select-scenario').html(options);
 });
-//$("#select-feature").change(function(){
-   //correspondingID = $(this).find(":selected").val()
-   //$(".demo-default").hide();
-   //$("#" + correspondingID).show();
-
-//})
+var scenarios = document.getElementById("select-scenario");
+scenarios.onchange = function(){
+  if (event.target.value === "LU"){
+    removeMarkers(realmarkers);
+    plotMarkers(realmarkers_lu);
+  }else if (event.target.value == "BA") {
+    removeMarkers(realmarkers);
+    plotMarkers(realmarkers_ba);
+  }else if (event.target.value == "FQ") {
+    emoveMarkers(realmarkers);
+    plotMarkers(realmarkers_fq);
+  }else{
+    plotMarkers(realmarkers);
+  }
+};
