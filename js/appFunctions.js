@@ -21,7 +21,8 @@ var cbd_data = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/mas
 var ut_data = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/master/data/ut.geojson";
 var nhood_data = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/master/data/nhood.geojson";
 var hotline_data = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/master/data/hotlines.geojson";
-var markers, realmarkers, nhood, cbd, ut, newtmp, nhood_bound, tmp, hotlines;
+var hotline_trend_data = "https://raw.githubusercontent.com/cathyxuhyx/MUSA801-Web-App/master/data/route_js.json";
+var markers, realmarkers, nhood, cbd, ut, newtmp, nhood_bound, tmp, hotlines, trends;
 var austin = [];
 
 color_ridership = chroma.scale('YlGnBu').colors(6);
@@ -124,11 +125,6 @@ var removeMarkers = function (marker) {
   });
 };
 
-// Plot Routes
-var plotroutes = function () {
-
-};
-
 //show results
 var showResults = function() {
   $('#intro').hide();
@@ -172,7 +168,11 @@ var eachFeatureFunction = function(marker) {
 var newRoute, newRoute_b, route_layer;
 var hoverRoute = function(routedata){
   routedata.on('click', function(e) {
-      var route_layer = e.target;
+      if (typeof(newRoute) !== "undefined"){
+        map.removeLayer(newRoute);
+        map.removeLayer(newRoute_b);
+      }
+      route_layer = e.target;
       newRoute = L.geoJSON(route_layer.feature.geometry, {
         color: "#fff6cf",
         weight: 9});
@@ -181,14 +181,134 @@ var hoverRoute = function(routedata){
         weight: 12});
       map.addLayer(newRoute_b);
       map.addLayer(newRoute);
-      console.log(route_layer.feature.properties.ROUTE_ID);
+      var route_box = turf.bbox(route_layer.feature.geometry);
+      map.fitBounds([[route_box[1],route_box[0]-0.1],[route_box[3],route_box[2]]]);
+      var n = route_layer.feature.properties.ROUTE_ID;
+      drawCharts(trends, n);
+      $('#chart').show();
+  });
+};
+
+// add hotline charts function
+var drawCharts = function(trends, n){
+//  $("#route-title").append(`<b>Route ${n} Ridership Summary</b>`);
+  title = `Route ${n} Ridership Summary`;
+  var chart = bb.generate({
+    title: {
+      text: title,
+      padding: {bottom: 30}
+    },
+    size: {
+      height: 200,
+      width: 300
+    },
+    data: {
+      columns: [
+        ["mean passenger load"].concat(trends[n]["mean_load"])
+      ],
+      types: {'mean passenger load': "area-spline"},
+      colors: {'mean passenger load':"#FDCE07"}
+    },
+    point: {show: false},
+    area: {linearGradient: true},
+    zoom: {enabled: true},
+    tooltip: {
+      linked: true
+    },
+    axis: {
+    x: {
+      //show: false,
+      tick: {
+        outer: false,
+        show: false,
+        text: {show: false}
+      }
+    },
+    y: {
+      //inner: true,
+      tick: {
+        outer: false,
+        show: true,
+        stepSize: 5
+      }
+    }
+  },
+  line: {
+    classes: [
+      "line-class-data1"
+    ]
+  },
+  grid: {
+    x: {show: false},
+    y: {show: false}
+  },
+    bindto: "#chart1"
   });
 
-  // routedata.on('mouseout', function(e) {
-  //     map.removeLayer(newRoute);
-  //     map.removeLayer(newRoute_b);
-  // });
+  var chart2 = bb.generate({
+    size: {
+      height: 200,
+      width: 300
+    },
+    data: {
+      columns: [
+        ["mean boarding"].concat(trends[n]["mean_on"]),
+        ["mean alighting"].concat(trends[n]["mean_off"])
+      ],
+      types: {
+        'mean boarding': "area",
+        'mean alighting': "area"
+      },
+      colors: {
+        'mean boarding': "#2166ac",
+        'mean alighting': "#ef8a62"
+      },
+    },
+    point: {show: false},
+    area: {linearGradient: true},
+    zoom: {enabled: true},
+    tooltip: {
+      linked: true//,
+      //grouped: false
+    },
+    axis: {
+    x: {
+      label: {
+        position: "outer-center",
+        text: "Stop Sequence ID",
+    },
+      //show: false,
+      tick: {
+        count: 5,
+        outer: false,
+        show: true,
+        //stepSize: 20,
+        //text: {show: false}
+      }
+    },
+    y: {
+      //inner: true,
+      tick: {
+        outer: false,
+        show: true,
+        stepSize: 3
+      }
+    }
+  },
+  line: {
+    classes: [
+      "line-class-data1",
+      "line-class-data1"
+    ]
+  },
+  grid: {
+    x: {show: false},
+    y: {show: false}
+  },
+    bindto: "#chart2"
+  });
 };
+
 
 
 //run the analysis by start the request of the dataset
@@ -281,6 +401,11 @@ $(document).ready(function() {
       hoverRoute(route);});
   });
 
+  //read hotline trend dataset
+  $.ajax(hotline_trend_data).done(function(data) {
+    trends = JSON.parse(data);
+  });
+
 });
 
 
@@ -315,6 +440,12 @@ third.onchange = function () {
     }else {
       map.removeLayer(hotlines);
     }};
+
+document.getElementById("close").onclick = function(){
+  $('#chart').hide();
+  map.removeLayer(newRoute);
+  map.removeLayer(newRoute_b);
+};
 
 $('#select-feature').selectize({
   create: true,

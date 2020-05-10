@@ -25,17 +25,26 @@ p.main {
 .chart {
   position: absolute;
   left: 450px;
-  width: 350px;
-  top: 50px;
-  height: 350px;
+  width: 390px;
+  top: 30px;
+  height: 510px;
   overflow-y: auto;
   padding: 30px;
   font-size: 16px;
-  background-color: rgba(255,255,255,0.25);
+  background-color: rgba(255,255,255,0.75);
   color: black;
   box-shadow: 0 5px 10px rgba(0,0,0,0.25);
   z-index: 10000;
   border-radius: 15px;
+}
+
+#chart2 .line-class-data1 { stroke-width: 3px; }
+#chart1 .line-class-data1 { stroke-width: 5px; }
+#tooltip {
+  font-size: 13px;
+  padding: 0;
+  margin-bottom: 50px;
+  z-index: 10002;
 }
 
 .sidebar {
@@ -105,7 +114,7 @@ a.button#sharing {
   border: 0px;
 }
 
-button {
+button#return {
   background-color: #FDCE07;
   border: 1px solid white;
   color: white;
