@@ -184,8 +184,9 @@ var hoverRoute = function(routedata){
       var route_box = turf.bbox(route_layer.feature.geometry);
       map.fitBounds([[route_box[1],route_box[0]-0.1],[route_box[3],route_box[2]]]);
       var n = route_layer.feature.properties.ROUTE_ID;
-      drawCharts(trends, n);
       $('#chart').show();
+      drawCharts(trends, n);
+
   });
 };
 
@@ -445,6 +446,7 @@ document.getElementById("close").onclick = function(){
   $('#chart').hide();
   map.removeLayer(newRoute);
   map.removeLayer(newRoute_b);
+  map.setView([30.266926, -97.750519], 12);
 };
 
 $('#select-feature').selectize({
