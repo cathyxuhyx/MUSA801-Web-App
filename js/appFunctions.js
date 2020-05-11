@@ -242,7 +242,7 @@ var closeResults = function() {
 
 var clearScenarios = function(){
   document.getElementById("glance").checked = false;
-  document.getElementById("select-feature").value = "0";
+  myScenarioValue = undefined;
   removeMarkers(realmarkers_ba);
   removeMarkers(realmarkers_fq);
   removeMarkers(realmarkers_lu);
@@ -533,7 +533,7 @@ $(document).ready(function() {
 });
 var scenarios = document.getElementById("select-scenario");
 scenarios.onchange = function(){
-  if (event.target.value === "LU"){
+  if (myScenarioValue === "LU"){
     console.log(event.target.value);
     removeMarkers(realmarkers);
     $.ajax(landuse).done(function(data) {
@@ -549,7 +549,7 @@ scenarios.onchange = function(){
         console.log(markers_lu);
         console.log(realmarkers_lu);
       });
-  }else if (event.target.value == "BA") {
+  }else if (myScenarioValue == "BA") {
     removeMarkers(realmarkers);
     $.ajax(bldgarea).done(function(data) {
       //parse the csv file
@@ -564,7 +564,7 @@ scenarios.onchange = function(){
        console.log(markers_ba);
        console.log(realmarkers_ba);
      });
-  }else if (event.target.value == "FQ") {
+  }else if (myScenarioValue == "FQ") {
     removeMarkers(realmarkers);
     $.ajax(freq).done(function(data) {
       //parse the csv file
@@ -590,7 +590,7 @@ document.getElementById("glance").onchange = function () {
   $("#OG").click(function() {
     clearScenarios();
   });
-  if($('#select-feature').val() == null || $('#select-feature').val() == "0"){
+  if(myScenarioValue == undefined){
     if (this.checked == true) {
         plotMarkers(realmarkers);
 
@@ -607,7 +607,7 @@ document.getElementById("glance").onchange = function () {
       }else {
         $(".legend").hide();
       }
-    } else if ($('#select-feature').val() == "LU" && $('#select-scenario').val() == "LU") {
+    } else if (myScenarioValue == "LU" ) {
 
         if (this.checked == true) {
           plotMarkers(realmarkers_lu);
@@ -625,7 +625,7 @@ document.getElementById("glance").onchange = function () {
         }else {
           $(".sce-legend").hide();
         }
-      } else if ($('#select-feature').val() == "BA" && $('#select-scenario').val() == "BA") {
+      } else if (  myScenarioValue == "BA") {
         if (this.checked == true) {
           plotMarkers(realmarkers_ba);
 
@@ -642,7 +642,7 @@ document.getElementById("glance").onchange = function () {
         }else {
           $(".sce-legend").hide();
         }
-      }else if ($('#select-feature').val() == "FQ" && $('#select-scenario').val() == "FQ") {
+      }else if (myScenarioValue == "FQ") {
           if (this.checked == true) {
             plotMarkers(realmarkers_fq);
 
@@ -710,36 +710,19 @@ document.getElementById("chart_ridership").onclick = function(){
 };
 
 // drop down selection
-$("#select-feature").change(function() {
+/*$("#select-feature").change(function() {
   if ($(this).data('options') === undefined) {
     /*Taking an array of all options-2 and kind of embedding it on the select1*/
-    $(this).data('options', $('#select-scenario option').clone());
+/*    $(this).data('options', $('#select-scenario option').clone());
   }
   var id = $(this).val();
   console.log(id);
   var options = $(this).data('options').filter('[value=' + id + ']');
   console.log(options);
   $('#select-scenario').html(options);
-});
-/*var myFieldValue;
-$('#select-feature').selectize({
-  create: true,
-  sortField: {
-    field: 'text',
-    direction: 'asc'
-  },
-  dropdownParent: 'body',
-  onChange        : function(id){
-      myFieldValue = id;
-       myText = this.options[id];
-      console.log(myFieldValue);
-      console.log(myText);
-      //alternatively, to get the text value use the following:
-   }
-});
+});*/
 
-var myScenarioValue;
-$('#select-scenario').selectize({
+var scenariosList = $('#select-scenario').selectize({
   create: true,
   sortField: {
     field: 'text',
@@ -748,7 +731,31 @@ $('#select-scenario').selectize({
   dropdownParent: 'body',
   onChange: function(id){
     myScenarioValue = id;
-    console.log(myScenarioValue);
+    console.log(myScenarioValue)
   }
 });
-console.log(myFieldValue,myScenarioValue);*/
+var myScenarioValue;
+var myFieldValue;
+var myList;
+var features = $('#select-feature').selectize({
+      create: true,
+      sortField: {
+        field: 'text',
+        direction: 'asc'
+      },
+      dropdownParent: 'body',
+      onChange        : function(id){
+        scenariosList[0].selectize.removeOption();
+        if(id == "BA"){
+          myList = {disabled: false, text: "Building areas Increase 40,000 sqft", value: "BA"};
+        }else if (id == "LU"){
+            myList = {disabled: false, text:"Commercial and Residential exchange by 10%" , value: "LU"};
+        }else if (id == "FQ"){
+          myList = {disabled: false, text: "Feeder Routes to High Frequency", value: "FQ"};
+        }else{
+          myList = {disabled: false, text: "Select a scenario...", value: "0"};
+        }
+        console.log(myList);
+        scenariosList[0].selectize.addOption(myList);
+       }
+    });
