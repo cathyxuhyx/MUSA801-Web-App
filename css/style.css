@@ -139,6 +139,7 @@ button#return {
 }
 
 button#OG {
+  position: relative;
   background-color: #FDCE07;
   border: 1px solid white;
   color: white;
@@ -148,9 +149,10 @@ button#OG {
   /* display: inline-block; */
   font-size: 14px;
   font-weight: bold;
-  position: absolute;
-  bottom:50px;
-  left: 20px;
+  /* position: absolute; */
+  /* bottom:50px; */
+  top: 30px;
+  left: 15px;
   /* height: 50px;
   width: 300px; */
 }

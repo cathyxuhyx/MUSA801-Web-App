@@ -247,6 +247,7 @@ var clearScenarios = function(){
   removeMarkers(realmarkers_fq);
   removeMarkers(realmarkers_lu);
   plotMarkers(realmarkers);
+  zoomin(realmarkers);
   $(".sce-legend").hide();
   $(".legend").show();
   map.setView( [30.266926, -97.750519], 13);
@@ -645,7 +646,7 @@ scenarios.onchange = function(){
         return typeof(marker) != "undefined";});
        plotMarkers(realmarkers_ba);
        //click event for each marker
-       zoomin_sce(realmarkers_lu);
+       zoomin_sce(realmarkers_ba);
        $(".legend").hide();
        $(".sce-legend").show();
        map.setView([30.326926, -97.750519], 11);
@@ -665,7 +666,7 @@ scenarios.onchange = function(){
         return typeof(marker) != "undefined";});
         plotMarkers(realmarkers_fq);
         //click event for each marker
-        zoomin_sce(realmarkers_lu);
+        zoomin_sce(realmarkers_fq);
         $(".legend").hide();
         $(".sce-legend").show();
         map.setView([30.326926, -97.750519], 11);
