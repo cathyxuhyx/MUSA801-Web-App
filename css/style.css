@@ -163,7 +163,11 @@ button#OG {
   display: inline-block;
 }
 
-.control-group {
+.container {
+  color: black;
+}
+
+.control-group{
   color: black;
 }
 

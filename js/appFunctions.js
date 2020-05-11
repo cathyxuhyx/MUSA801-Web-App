@@ -435,58 +435,6 @@ $(document).ready(function() {
       return typeof(marker) != "undefined";});
       plotMarkers(realmarkers);
     });
-      var scenarios = document.getElementById("select-scenario");
-      scenarios.onchange = function(){
-        if (event.target.value === "LU"){
-          console.log(event.target.value);
-          removeMarkers(realmarkers);
-          $.ajax(landuse).done(function(data) {
-            //parse the csv file
-            var rows = data.split("\n");
-            for (var i=0;i<rows.length;i=i+1){
-                lu.push(rows[i].split(','));}
-            //make markers and plot them
-            markers_lu = makeMarkers(lu);
-            realmarkers_lu = _.filter(markers_lu, function(marker){
-              return typeof(marker) != "undefined";});
-              plotMarkers(realmarkers_lu);
-              console.log(markers_lu);
-              console.log(realmarkers_lu);
-            });
-        }else if (event.target.value == "BA") {
-          removeMarkers(realmarkers);
-          $.ajax(bldgarea).done(function(data) {
-            //parse the csv file
-            var rows = data.split("\n");
-            for (var i=0;i<rows.length;i=i+1){
-                ba.push(rows[i].split(','));}
-            //make markers and plot them
-            markers_ba = makeMarkers(ba);
-            realmarkers_ba = _.filter(markers_ba, function(marker){
-              return typeof(marker) != "undefined";});
-             plotMarkers(realmarkers_ba);
-             console.log(markers_ba);
-             console.log(realmarkers_ba);
-           });
-        }else if (event.target.value == "FQ") {
-          removeMarkers(realmarkers);
-          $.ajax(freq).done(function(data) {
-            //parse the csv file
-            var rows = data.split("\n");
-            for (var i=0;i<rows.length;i=i+1){
-                fq.push(rows[i].split(','));}
-            //make markers and plot them
-            markers_fq = makeMarkers(fq);
-            realmarkers_fq = _.filter(markers_fq, function(marker){
-              return typeof(marker) != "undefined";});
-              plotMarkers(realmarkers_fq);
-              console.log(markers_fq);
-              console.log(realmarkers_fq);
-            });
-        }else{
-          plotMarkers(realmarkers);
-        }
-      };
 
 
 
@@ -583,7 +531,58 @@ $(document).ready(function() {
   });
 
 });
-
+var scenarios = document.getElementById("select-scenario");
+scenarios.onchange = function(){
+  if (event.target.value === "LU"){
+    console.log(event.target.value);
+    removeMarkers(realmarkers);
+    $.ajax(landuse).done(function(data) {
+      //parse the csv file
+      var rows = data.split("\n");
+      for (var i=0;i<rows.length;i=i+1){
+          lu.push(rows[i].split(','));}
+      //make markers and plot them
+      markers_lu = makeMarkers(lu);
+      realmarkers_lu = _.filter(markers_lu, function(marker){
+        return typeof(marker) != "undefined";});
+        plotMarkers(realmarkers_lu);
+        console.log(markers_lu);
+        console.log(realmarkers_lu);
+      });
+  }else if (event.target.value == "BA") {
+    removeMarkers(realmarkers);
+    $.ajax(bldgarea).done(function(data) {
+      //parse the csv file
+      var rows = data.split("\n");
+      for (var i=0;i<rows.length;i=i+1){
+          ba.push(rows[i].split(','));}
+      //make markers and plot them
+      markers_ba = makeMarkers(ba);
+      realmarkers_ba = _.filter(markers_ba, function(marker){
+        return typeof(marker) != "undefined";});
+       plotMarkers(realmarkers_ba);
+       console.log(markers_ba);
+       console.log(realmarkers_ba);
+     });
+  }else if (event.target.value == "FQ") {
+    removeMarkers(realmarkers);
+    $.ajax(freq).done(function(data) {
+      //parse the csv file
+      var rows = data.split("\n");
+      for (var i=0;i<rows.length;i=i+1){
+          fq.push(rows[i].split(','));}
+      //make markers and plot them
+      markers_fq = makeMarkers(fq);
+      realmarkers_fq = _.filter(markers_fq, function(marker){
+        return typeof(marker) != "undefined";});
+        plotMarkers(realmarkers_fq);
+        console.log(markers_fq);
+        console.log(realmarkers_fq);
+      });
+  }else{
+    plotMarkers(realmarkers);
+  }
+};
 
 // switches
 document.getElementById("glance").onchange = function () {
@@ -661,7 +660,7 @@ document.getElementById("glance").onchange = function () {
             $(".sce-legend").hide();
           }
         }
-  }
+  };
 
 document.getElementById("dt").onchange = function () {
     if (this.checked == true) {
@@ -720,7 +719,7 @@ $('#select-feature').selectize({
   dropdownParent: 'body'
 });
 
-$('#selct-scenario').selectize({
+$('#select-scenario').selectize({
   create: true,
   sortField: {
     field: 'text',
@@ -737,7 +736,7 @@ $("#select-feature").change(function() {
   }
   var id = $(this).val();
   console.log(id);
-  var options = $(this).data('options').filter('[value=' + id + ']');
+  var options = $(this).data('options').filter(`[value= ${id}]`);
   console.log(options);
   $('#select-scenario').html(options);
 });
