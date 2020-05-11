@@ -252,15 +252,17 @@ var clearScenarios = function(){
   map.setView( [30.266926, -97.750519], 13);
 };
 
+var t;
 //change side bar information with respect to each country
 var eachFeatureFunction = function(marker) {
   if (typeof(marker) != "undefined") {
     marker.on('click', function(event) {
+      t=event.target.options.mean_on;
       $("#stop-name").text(event.target.options.stop_id);
-      $("#stop-boarding").text(event.target.options.mean_on);
-      $("#stop-commercial").text(event.target.options.commercial*100);
-      $("#stop-residential").text(event.target.options.residential*100);
-      $("#stop-building").text(event.target.options.building_area);
+      $("#stop-boarding").text(parseFloat(event.target.options.mean_on).toFixed(2));
+      $("#stop-commercial").text(parseFloat(event.target.options.commercial*100).toFixed(2));
+      $("#stop-residential").text(parseFloat(event.target.options.residential*100).toFixed(2));
+      $("#stop-building").text(parseFloat(event.target.options.building_area).toFixed(2));
       $("#delta").hide();
       showResults();
 
@@ -283,12 +285,12 @@ var eachFeatureFunction_sce = function(marker) {
   if (typeof(marker) != "undefined") {
     marker.on('click', function(event) {
       $("#stop-name").text(event.target.options.stop_id);
-      $("#stop-boarding").text(event.target.options.mean_on);
-      $("#stop-commercial").text(event.target.options.commercial*100);
-      $("#stop-residential").text(event.target.options.residential*100);
-      $("#stop-building").text(event.target.options.building_area);
-      $("#change").text(event.target.options.change);
-      console.log(event.target.options.change);
+      $("#stop-boarding").text(parseFloat(event.target.options.mean_on).toFixed(2));
+      $("#stop-commercial").text(parseFloat(event.target.options.commercial*100).toFixed(2));
+      $("#stop-residential").text(parseFloat(event.target.options.residential*100).toFixed(2));
+      $("#stop-building").text(parseFloat(event.target.options.building_area).toFixed(2));
+      $("#change").text(parseFloat(event.target.options.change).toFixed(2));
+      //console.log(event.target.options.change);
       showResults();
       //highlight the stop;
       if (typeof(newtmp) != "undefined"){
@@ -305,7 +307,28 @@ var eachFeatureFunction_sce = function(marker) {
   }
 };
 
-// hover on each route
+
+//zoom in to each markers
+//click event for each marker
+var zoomin = function(markers) {
+  _.each(markers, function(marker){
+    eachFeatureFunction(marker);});
+  $("#return").click(function() {
+  closeResults();
+  map.removeLayer(newtmp);
+});
+};
+var zoomin_sce = function(markers) {
+  _.each(markers, function(marker){
+    eachFeatureFunction_sce(marker);});
+  $("#return").click(function() {
+  closeResults();
+  map.removeLayer(newtmp);
+});
+};
+
+
+// click on each route
 var newRoute, newRoute_b, route_layer;
 var hoverRoute = function(routedata){
   routedata.on('click', function(e) {
@@ -436,8 +459,6 @@ $(document).ready(function() {
       //plotMarkers(realmarkers);
     });
 
-
-
     //show Legend
     $(".legend").append(`<b>2019 Average Daily Boarding per Stop&nbsp</b>
     <span class = "dot" style="background-color:${color_ridership[1]}"></span>
@@ -520,6 +541,7 @@ $(document).ready(function() {
   });
 });
 
+
 // switches
 // switch ridership by stops
 document.getElementById("glance").onchange = function () {
@@ -528,13 +550,14 @@ document.getElementById("glance").onchange = function () {
         plotMarkers(realmarkers);
 
         //click event for each marker
-        _.each(markers, function(marker){
-          eachFeatureFunction(marker);});
-
-        $("#return").click(function() {
-          closeResults();
-          map.removeLayer(newtmp);
-        });
+        zoomin(realmarkers);
+        // _.each(markers, function(marker){
+        //   eachFeatureFunction(marker);});
+        //
+        // $("#return").click(function() {
+        //   closeResults();
+        //   map.removeLayer(newtmp);
+        // });
         $(".legend").show();
         map.setView([30.266926, -97.750519], 13);
       }else {
@@ -607,6 +630,9 @@ scenarios.onchange = function(){
       realmarkers_lu = _.filter(markers_lu, function(marker){
         return typeof(marker) != "undefined";});
         plotMarkers(realmarkers_lu);
+        //click event for each marker
+        zoomin_sce(realmarkers_lu);
+        $(".legend").hide();
         $(".sce-legend").show();
         map.setView([30.326926, -97.750519], 11);
         // console.log(markers_lu);
@@ -624,6 +650,9 @@ scenarios.onchange = function(){
       realmarkers_ba = _.filter(markers_ba, function(marker){
         return typeof(marker) != "undefined";});
        plotMarkers(realmarkers_ba);
+       //click event for each marker
+       zoomin_sce(realmarkers_lu);
+       $(".legend").hide();
        $(".sce-legend").show();
        map.setView([30.326926, -97.750519], 11);
        // console.log(markers_ba);
@@ -641,6 +670,9 @@ scenarios.onchange = function(){
       realmarkers_fq = _.filter(markers_fq, function(marker){
         return typeof(marker) != "undefined";});
         plotMarkers(realmarkers_fq);
+        //click event for each marker
+        zoomin_sce(realmarkers_lu);
+        $(".legend").hide();
         $(".sce-legend").show();
         map.setView([30.326926, -97.750519], 11);
         // console.log(markers_fq);
