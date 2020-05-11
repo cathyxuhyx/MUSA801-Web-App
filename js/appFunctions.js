@@ -710,25 +710,6 @@ document.getElementById("chart_ridership").onclick = function(){
 };
 
 // drop down selection
-$('#select-feature').selectize({
-  create: true,
-  sortField: {
-    field: 'text',
-    direction: 'asc'
-  },
-  dropdownParent: 'body'
-});
-
-$('#select-scenario').selectize({
-  create: true,
-  sortField: {
-    field: 'text',
-    direction: 'asc'
-  },
-  dropdownParent: 'body',
-});
-
-//set the dynamic secondary drop-down
 $("#select-feature").change(function() {
   if ($(this).data('options') === undefined) {
     /*Taking an array of all options-2 and kind of embedding it on the select1*/
@@ -736,7 +717,38 @@ $("#select-feature").change(function() {
   }
   var id = $(this).val();
   console.log(id);
-  var options = $(this).data('options').filter(`[value= ${id}]`);
+  var options = $(this).data('options').filter('[value=' + id + ']');
   console.log(options);
   $('#select-scenario').html(options);
 });
+/*var myFieldValue;
+$('#select-feature').selectize({
+  create: true,
+  sortField: {
+    field: 'text',
+    direction: 'asc'
+  },
+  dropdownParent: 'body',
+  onChange        : function(id){
+      myFieldValue = id;
+       myText = this.options[id];
+      console.log(myFieldValue);
+      console.log(myText);
+      //alternatively, to get the text value use the following:
+   }
+});
+
+var myScenarioValue;
+$('#select-scenario').selectize({
+  create: true,
+  sortField: {
+    field: 'text',
+    direction: 'asc'
+  },
+  dropdownParent: 'body',
+  onChange: function(id){
+    myScenarioValue = id;
+    console.log(myScenarioValue);
+  }
+});
+console.log(myFieldValue,myScenarioValue);*/
