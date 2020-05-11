@@ -117,8 +117,9 @@ a.button#sharing {
   height: 25px;
   width: 90px;
   padding: 5px;
-  background-color: #FDCE07;
+  background-color: rgb(0,150,250,.5);
   border: 0px;
+  border: 1px solid white;
 }
 
 button#return {

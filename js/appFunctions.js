@@ -175,7 +175,7 @@ var myStyle = function(row) {
               building_area: building_area};
     } else if (diff == 0){
       return {color: "#dadada",
-              opacity: 0.6,
+              opacity: 0.3,
               weight: 5,
               fillColor: "#dadada",
               radius: 2,
@@ -199,7 +199,7 @@ var myStyle = function(row) {
               building_area: building_area};
             }
           }
-  }
+  };
 
 
 //function to plot the locations
@@ -248,9 +248,9 @@ var clearScenarios = function(){
   removeMarkers(realmarkers_lu);
   plotMarkers(realmarkers);
   $(".sce-legend").hide();
+  $(".legend").show();
   map.setView( [30.266926, -97.750519], 13);
-
-}
+};
 
 //change side bar information with respect to each country
 var eachFeatureFunction = function(marker) {
@@ -433,7 +433,7 @@ $(document).ready(function() {
     markers = makeMarkers(austin);
     realmarkers = _.filter(markers, function(marker){
       return typeof(marker) != "undefined";});
-      plotMarkers(realmarkers);
+      //plotMarkers(realmarkers);
     });
 
 
@@ -464,17 +464,6 @@ $(document).ready(function() {
     <a> 42-80&nbsp</a>
     <span class = "dot" style="background-color:${color_ridership[5]}"></span>
     <a> > 80</a>`);
-
-    //click event for each marker
-  //  _.each(markers, function(marker){
-    //  eachFeatureFunction(marker);});
-
-  //  $("#return").click(function() {
-    //  closeResults();
-    //  map.removeLayer(newtmp);
-  //  });
-//  });});});
-//});
 
   //read neighborhood dataset
   $.ajax(nhood_data).done(function(data) {
@@ -529,69 +518,13 @@ $(document).ready(function() {
   $.ajax(hotline_trend_data).done(function(data) {
     trends = JSON.parse(data);
   });
-
 });
-var scenarios = document.getElementById("select-scenario");
-scenarios.onchange = function(){
-  if (myScenarioValue === "LU"){
-    console.log(event.target.value);
-    removeMarkers(realmarkers);
-    $.ajax(landuse).done(function(data) {
-      //parse the csv file
-      var rows = data.split("\n");
-      for (var i=0;i<rows.length;i=i+1){
-          lu.push(rows[i].split(','));}
-      //make markers and plot them
-      markers_lu = makeMarkers(lu);
-      realmarkers_lu = _.filter(markers_lu, function(marker){
-        return typeof(marker) != "undefined";});
-        plotMarkers(realmarkers_lu);
-        console.log(markers_lu);
-        console.log(realmarkers_lu);
-      });
-  }else if (myScenarioValue == "BA") {
-    removeMarkers(realmarkers);
-    $.ajax(bldgarea).done(function(data) {
-      //parse the csv file
-      var rows = data.split("\n");
-      for (var i=0;i<rows.length;i=i+1){
-          ba.push(rows[i].split(','));}
-      //make markers and plot them
-      markers_ba = makeMarkers(ba);
-      realmarkers_ba = _.filter(markers_ba, function(marker){
-        return typeof(marker) != "undefined";});
-       plotMarkers(realmarkers_ba);
-       console.log(markers_ba);
-       console.log(realmarkers_ba);
-     });
-  }else if (myScenarioValue == "FQ") {
-    removeMarkers(realmarkers);
-    $.ajax(freq).done(function(data) {
-      //parse the csv file
-      var rows = data.split("\n");
-      for (var i=0;i<rows.length;i=i+1){
-          fq.push(rows[i].split(','));}
-      //make markers and plot them
-      markers_fq = makeMarkers(fq);
-      realmarkers_fq = _.filter(markers_fq, function(marker){
-        return typeof(marker) != "undefined";});
-        plotMarkers(realmarkers_fq);
-        console.log(markers_fq);
-        console.log(realmarkers_fq);
-      });
-  }else{
-    plotMarkers(realmarkers);
-  }
-};
 
 // switches
+// switch ridership by stops
 document.getElementById("glance").onchange = function () {
-  console.log($('#select-feature').val());
-  $("#OG").click(function() {
-    clearScenarios();
-  });
-  if(myScenarioValue == undefined){
     if (this.checked == true) {
+        $(".sce-legend").hide();
         plotMarkers(realmarkers);
 
         //click event for each marker
@@ -606,62 +539,10 @@ document.getElementById("glance").onchange = function () {
         map.setView([30.266926, -97.750519], 13);
       }else {
         $(".legend").hide();
+        removeMarkers(realmarkers);
       }
-    } else if (myScenarioValue == "LU" ) {
-
-        if (this.checked == true) {
-          plotMarkers(realmarkers_lu);
-
-          //click event for each marker
-          _.each(markers_lu, function(marker){
-            eachFeatureFunction_sce(marker);});
-
-          $("#return").click(function() {
-            closeResults();
-            map.removeLayer(newtmp);
-          });
-          $(".sce-legend").show();
-          map.setView([30.266926, -97.750519], 13);
-        }else {
-          $(".sce-legend").hide();
-        }
-      } else if (  myScenarioValue == "BA") {
-        if (this.checked == true) {
-          plotMarkers(realmarkers_ba);
-
-          //click event for each marker
-          _.each(markers_ba, function(marker){
-            eachFeatureFunction_sce(marker);});
-
-          $("#return").click(function() {
-            closeResults();
-            map.removeLayer(newtmp);
-          });
-          $(".sce-legend").show();
-          map.setView([30.266926, -97.750519], 13);
-        }else {
-          $(".sce-legend").hide();
-        }
-      }else if (myScenarioValue == "FQ") {
-          if (this.checked == true) {
-            plotMarkers(realmarkers_fq);
-
-            //click event for each marker
-            _.each(markers_fq, function(marker){
-              eachFeatureFunction_sce(marker);});
-
-            $("#return").click(function() {
-              closeResults();
-              map.removeLayer(newtmp);
-            });
-            $(".sce-legend").show();
-            map.setView([30.266926, -97.750519], 13);
-          }else {
-            $(".sce-legend").hide();
-          }
-        }
   };
-
+//switch ridership by types
 document.getElementById("dt").onchange = function () {
     if (this.checked == true) {
       map.addLayer(nhood);
@@ -680,7 +561,7 @@ document.getElementById("dt").onchange = function () {
       $('#chart_ridership').hide();
       //map.setView([30.266926, -97.750519], 13);
     }};
-
+//switch ridership by routes
 document.getElementById("route").onchange = function () {
     if (this.checked == true) {
       map.addLayer(hotlines);
@@ -709,18 +590,72 @@ document.getElementById("chart_ridership").onclick = function(){
   map.setView([30.266926, -97.750519], 12);
 };
 
-// drop down selection
-/*$("#select-feature").change(function() {
-  if ($(this).data('options') === undefined) {
-    /*Taking an array of all options-2 and kind of embedding it on the select1*/
-/*    $(this).data('options', $('#select-scenario option').clone());
+
+//scenarios plot markers
+var scenarios = document.getElementById("select-scenario");
+scenarios.onchange = function(){
+  if (myScenarioValue === "LU"){
+    console.log(event.target.value);
+    removeMarkers(realmarkers);
+    $.ajax(landuse).done(function(data) {
+      //parse the csv file
+      var rows = data.split("\n");
+      for (var i=0;i<rows.length;i=i+1){
+          lu.push(rows[i].split(','));}
+      //make markers and plot them
+      markers_lu = makeMarkers(lu);
+      realmarkers_lu = _.filter(markers_lu, function(marker){
+        return typeof(marker) != "undefined";});
+        plotMarkers(realmarkers_lu);
+        $(".sce-legend").show();
+        map.setView([30.326926, -97.750519], 11);
+        // console.log(markers_lu);
+        // console.log(realmarkers_lu);
+      });
+  }else if (myScenarioValue == "BA") {
+    removeMarkers(realmarkers);
+    $.ajax(bldgarea).done(function(data) {
+      //parse the csv file
+      var rows = data.split("\n");
+      for (var i=0;i<rows.length;i=i+1){
+          ba.push(rows[i].split(','));}
+      //make markers and plot them
+      markers_ba = makeMarkers(ba);
+      realmarkers_ba = _.filter(markers_ba, function(marker){
+        return typeof(marker) != "undefined";});
+       plotMarkers(realmarkers_ba);
+       $(".sce-legend").show();
+       map.setView([30.326926, -97.750519], 11);
+       // console.log(markers_ba);
+       // console.log(realmarkers_ba);
+     });
+  }else if (myScenarioValue == "FQ") {
+    removeMarkers(realmarkers);
+    $.ajax(freq).done(function(data) {
+      //parse the csv file
+      var rows = data.split("\n");
+      for (var i=0;i<rows.length;i=i+1){
+          fq.push(rows[i].split(','));}
+      //make markers and plot them
+      markers_fq = makeMarkers(fq);
+      realmarkers_fq = _.filter(markers_fq, function(marker){
+        return typeof(marker) != "undefined";});
+        plotMarkers(realmarkers_fq);
+        $(".sce-legend").show();
+        map.setView([30.326926, -97.750519], 11);
+        // console.log(markers_fq);
+        // console.log(realmarkers_fq);
+      });
   }
-  var id = $(this).val();
-  console.log(id);
-  var options = $(this).data('options').filter('[value=' + id + ']');
-  console.log(options);
-  $('#select-scenario').html(options);
-});*/
+  // else{
+  //   plotMarkers(realmarkers);
+  // }
+};
+
+//scenarios selections
+$("#OG").click(function() {
+  clearScenarios();
+});
 
 var scenariosList = $('#select-scenario').selectize({
   create: true,
@@ -731,7 +666,6 @@ var scenariosList = $('#select-scenario').selectize({
   dropdownParent: 'body',
   onChange: function(id){
     myScenarioValue = id;
-    console.log(myScenarioValue)
   }
 });
 var myScenarioValue;
@@ -744,8 +678,8 @@ var features = $('#select-feature').selectize({
         direction: 'asc'
       },
       dropdownParent: 'body',
-      onChange        : function(id){
-        scenariosList[0].selectize.removeOption();
+      onChange: function(id){
+        scenariosList[0].selectize.clearOptions();
         if(id == "BA"){
           myList = {disabled: false, text: "Building areas Increase 40,000 sqft", value: "BA"};
         }else if (id == "LU"){
@@ -755,7 +689,6 @@ var features = $('#select-feature').selectize({
         }else{
           myList = {disabled: false, text: "Select a scenario...", value: "0"};
         }
-        console.log(myList);
         scenariosList[0].selectize.addOption(myList);
        }
     });
