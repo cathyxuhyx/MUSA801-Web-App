@@ -551,13 +551,7 @@ document.getElementById("glance").onchange = function () {
 
         //click event for each marker
         zoomin(realmarkers);
-        // _.each(markers, function(marker){
-        //   eachFeatureFunction(marker);});
-        //
-        // $("#return").click(function() {
-        //   closeResults();
-        //   map.removeLayer(newtmp);
-        // });
+
         $(".legend").show();
         map.setView([30.266926, -97.750519], 13);
       }else {
