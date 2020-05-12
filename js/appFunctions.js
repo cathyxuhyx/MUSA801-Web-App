@@ -248,6 +248,7 @@ var clearScenarios = function(){
   removeMarkers(realmarkers_lu);
   plotMarkers(realmarkers);
   zoomin(realmarkers);
+  scenariosList[0].selectize.clearOptions();
   $(".sce-legend").hide();
   $(".legend").show();
   map.setView( [30.266926, -97.750519], 13);
@@ -684,6 +685,7 @@ $("#OG").click(function() {
   clearScenarios();
 });
 
+
 var scenariosList = $('#select-scenario').selectize({
   create: true,
   sortField: {
@@ -706,7 +708,8 @@ var features = $('#select-feature').selectize({
       },
       dropdownParent: 'body',
       onChange: function(id){
-        scenariosList[0].selectize.clearOptions();
+        console.log(myList);
+        scenariosList[0].selectize.removeOption(scenariosList[0].selectize.getValue());
         if(id == "BA"){
           myList = {disabled: false, text: "Building areas Increase 40,000 sqft", value: "BA"};
         }else if (id == "LU"){
@@ -717,5 +720,6 @@ var features = $('#select-feature').selectize({
           myList = {disabled: false, text: "Select a scenario...", value: "0"};
         }
         scenariosList[0].selectize.addOption(myList);
+        console.log(scenariosList[0].selectize)
        }
     });
