@@ -711,7 +711,7 @@ var features = $('#select-feature').selectize({
         console.log(myList);
         scenariosList[0].selectize.removeOption(scenariosList[0].selectize.getValue());
         if(id == "BA"){
-          myList = {disabled: false, text: "Building areas Increase 40,000 sqft", value: "BA"};
+          myList = {disabled: false, text: "Building areas Increase 400,000 sqft", value: "BA"};
         }else if (id == "LU"){
             myList = {disabled: false, text:"Commercial and Residential exchange by 10%" , value: "LU"};
         }else if (id == "FQ"){
