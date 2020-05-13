@@ -292,6 +292,7 @@ var eachFeatureFunction_sce = function(marker) {
       $("#stop-residential").text(parseFloat(event.target.options.residential*100).toFixed(2));
       $("#stop-building").text(parseFloat(event.target.options.building_area).toFixed(2));
       $("#change").text(parseFloat(event.target.options.change).toFixed(2));
+      $("#delta").show();
       //console.log(event.target.options.change);
       showResults();
       //highlight the stop;
