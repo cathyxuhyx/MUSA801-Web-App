@@ -4,3 +4,6 @@ For analysis process, please go to [this repository](https://github.com/cathyxuh
 
 ## Web Application Team
 Hanyong Xu, Jia Yuan
+
+### Disclaimer
+Information displayed is not confirmed or authorized by CMTA and the results are solely the interpretation by the author for graphical purposes.
